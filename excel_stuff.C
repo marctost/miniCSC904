@@ -7,15 +7,15 @@ void excel_stuff(string which_plot) {
 
     PlotterLines ALCT_no(test, 2, 27, 2);
     PlotterLines CLCT_no(test, 2, 27, 7);
-    PlotterLines LCT_no(test, 2, 27, 11);
+    PlotterLines LCT_no(test, 2, 27, 12);
 
     PlotterLines ALCT_top(test, 33, 58, 2);
     PlotterLines CLCT_top(test, 33, 58, 7);
-    PlotterLines LCT_top(test, 33, 58, 11);
+    PlotterLines LCT_top(test, 33, 58, 12);
 
     PlotterLines ALCT_bottom(test, 64, 89, 2);
     PlotterLines CLCT_bottom(test, 64, 89, 7);
-    PlotterLines LCT_bottom(test, 64, 89, 11);
+    PlotterLines LCT_bottom(test, 64, 89, 12);
     
     if (which_plot=="ALCT_no"){
         graph_section(which_plot,ALCT_no);
@@ -100,9 +100,13 @@ int graph_section(string filename, PlotterLines graphLines){
 			//Creat the graph by looping over the number of points
 		TGraph *graph = new TGraph(number_of_points);
 		for (int i=0; i<number_of_points; i++){
-            graph->SetPoint(i,graphLines.voltages.at(i),graphLines.lines[j].at(i));
+            if (graphLines.lines[j].at(i)<0){
+                graph->SetPoint(i, graphLines.voltages.at(i),0);
+            }
+            else{
+                graph->SetPoint(i,graphLines.voltages.at(i),graphLines.lines[j].at(i));
 			}
-		
+        }
 
 		//Some things to make it look nice, using dummy variables for now :)
 		graph->GetXaxis()->SetTitle("Voltage (kV)");
@@ -114,9 +118,9 @@ int graph_section(string filename, PlotterLines graphLines){
         char const *name = name_thing.c_str();
 		legend->AddEntry(graph, name);
 		graph->SetMaximum(450);
+        graph->GetXaxis()->SetRangeUser(2,4);
         if (j==0){
             graph->SetTitle(filename.c_str());
-            
 			graph->Draw();
 		}
 		else{
