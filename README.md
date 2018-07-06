@@ -23,3 +23,12 @@ Cluster Charge Analysis -----
  * Copy the column of 27s files to cluster_files.txt
  * Modify run_cluster.sh depending on the chamber (the current setup is for GIF chamber)
  * ./run_cluster.sh, and it will create a file called "results_fit", you can use command+A command+C, then paste it to the spreadsheet using command+V
+
+
+-------------------------
+
+Dark Current plotting-----
+* Open the spreadsheet called "analysis_page_darkCurrent.xlsx"
+* Copy and paste the appropriate values below row 3 for all runs, make sure to include timing.
+* Export to the spreadsheet into a .csv file, with the same name.
+* Run the command: "bash make_dark_plots.sh"

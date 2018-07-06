@@ -60,9 +60,12 @@ vector<T> change_type_nofirst(vector<string> oldVec, T dummy) {
 
 class PlotterLines {
 public:
-  PlotterLines(ExcelSheet sheet, int startRow, int endRow, int startCol) : size(endRow + 1 - startRow) {
+    // This is the really important part of the code! it uses the above functions
+    // and takes the values out of the .csv files and returns in to the program
+    // calling it in the form of a vector.
+    PlotterLines(ExcelSheet sheet, int startRow, int endRow, int startCol, int col_num) : size(endRow + 1 - startRow) {
     double dummy;
-    for(int i = 0; i < 4; i++) {
+    for(int i = 0; i < col_num; i++) {
       lines[i] = change_type(vector<string>(sheet.Column[startCol+i].begin()+startRow, sheet.Column[startCol+i].begin()+endRow+1), dummy);
     }
     voltages = change_type(vector<string>(sheet.Column[0].begin()+startRow, sheet.Column[0].begin()+endRow+1), dummy);

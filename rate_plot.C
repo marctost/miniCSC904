@@ -5,17 +5,26 @@ int graph_section(string filename, PlotterLines graphLines);
 void rate_plot(string which_plot) {
     ExcelSheet test("final_numbers_rate.csv");
 
-    PlotterLines ALCT_no(test, 2, 27, 2);
-    PlotterLines CLCT_no(test, 2, 27, 7);
-    PlotterLines LCT_no(test, 2, 27, 12);
+    // This is the inportant bit! The first number refers to the excel sheet above. The second number is
+    // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
+    // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
+    // last number is the number of adjacent columns you're using. Make sure to remember that things start
+    // at zero!! So be careful.
+    
+    PlotterLines ALCT_no(test, 2, 27, 2, 4);
+    PlotterLines CLCT_no(test, 2, 27, 7, 4);
+    PlotterLines LCT_no(test, 2, 27, 12, 4);
 
-    PlotterLines ALCT_top(test, 33, 58, 2);
-    PlotterLines CLCT_top(test, 33, 58, 7);
-    PlotterLines LCT_top(test, 33, 58, 12);
+    PlotterLines ALCT_top(test, 33, 58, 2, 4);
+    PlotterLines CLCT_top(test, 33, 58, 7, 4);
+    PlotterLines LCT_top(test, 33, 58, 12,4 );
 
-    PlotterLines ALCT_bottom(test, 64, 89, 2);
-    PlotterLines CLCT_bottom(test, 64, 89, 7);
-    PlotterLines LCT_bottom(test, 64, 89, 12);
+    PlotterLines ALCT_bottom(test, 64, 89, 2, 4);
+    PlotterLines CLCT_bottom(test, 64, 89, 7, 4);
+    PlotterLines LCT_bottom(test, 64, 89, 12, 4);
+    
+    
+    // Choose which plot you do.
     
     if (which_plot=="ALCT_no"){
         graph_section(which_plot,ALCT_no);
@@ -49,11 +58,13 @@ void rate_plot(string which_plot) {
 
 int graph_section(string filename, PlotterLines graphLines){
 	
+    // These are the colors that will go into the plot.
     Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack};
     
     
 	int number_of_points=graphLines.size;
-	int number_of_lines=4;
+	//Number of lines that are going to be put on the plot
+    int number_of_lines=4;
 
 
 	//Just some styling stuff
@@ -97,7 +108,7 @@ int graph_section(string filename, PlotterLines graphLines){
 
 	//loop over the various files, and the points in it
 	for (int j=0; j<number_of_lines; j++){
-			//Creat the graph by looping over the number of points
+        //Creat the graph by looping over the number of points
 		TGraph *graph = new TGraph(number_of_points);
 		for (int i=0; i<number_of_points; i++){
             if (graphLines.lines[j].at(i)<0){
@@ -108,7 +119,7 @@ int graph_section(string filename, PlotterLines graphLines){
 			}
         }
 
-		//Some things to make it look nice, using dummy variables for now :)
+        // Some maintanence and labeling for the plot.
 		graph->GetXaxis()->SetTitle("Voltage (kV)");
 		graph->GetYaxis()->SetTitle("Hertz");
 		graph->SetLineColor(colors[j]);
@@ -125,6 +136,7 @@ int graph_section(string filename, PlotterLines graphLines){
         graph->SetMarkerSize(0.8);
         graph->SetMarkerColor(colors[j]);
         
+        // Draw the plots
         if (j==0){
             graph->SetTitle(filename.c_str());
 			graph->Draw();
@@ -139,10 +151,11 @@ int graph_section(string filename, PlotterLines graphLines){
 
 	legend->Draw("SAME");
 
-	//string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
+    // Save the plot to the desktop.
+	string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
 	canvas->Update();
-	//canvas->SaveAs(saveWhere.c_str());
-        canvas->Print(filename+".png");
+	canvas->SaveAs(saveWhere.c_str());
+    //canvas->Print(filename+".png");
 	canvas;
 
 

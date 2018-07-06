@@ -1,61 +1,82 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines);
+int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4);
+PlotterLines resize(PlotterLines graph_line);
+TGraph* make_graph(PlotterLines graph_line);
 
-void excel_stuff(string which_plot) {
-    ExcelSheet test("final_numbers.csv");
+void dark_current_plot(string which_plot) {
+    ExcelSheet test("analysis_page_darkCurrent.csv");
 
-    PlotterLines ALCT_no(test, 2, 27, 2);
-    PlotterLines CLCT_no(test, 2, 27, 7);
-    PlotterLines LCT_no(test, 2, 27, 12);
-
-    PlotterLines ALCT_top(test, 33, 58, 2);
-    PlotterLines CLCT_top(test, 33, 58, 7);
-    PlotterLines LCT_top(test, 33, 58, 12);
-
-    PlotterLines ALCT_bottom(test, 64, 89, 2);
-    PlotterLines CLCT_bottom(test, 64, 89, 7);
-    PlotterLines LCT_bottom(test, 64, 89, 12);
     
-    if (which_plot=="ALCT_no"){
-        graph_section(which_plot,ALCT_no);
+    // This is the inportant bit! The first number refers to the excel sheet above. The second number is
+    // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
+    // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
+    // last number is the number of adjacent columns you're using. Make sure to remember that things start
+    // at zero!! So be careful.
+    
+    PlotterLines irr_0(test, 3, 13, 0, 2);
+    PlotterLines ref_0(test, 3, 13, 3, 2);
+    
+    PlotterLines irr_1(test, 3, 13, 7, 2);
+    PlotterLines ref_1(test, 3, 13, 10, 2);
+    
+    PlotterLines irr_2(test, 3, 13, 14, 2);
+    PlotterLines ref_2(test, 3, 13, 17, 2);
+    
+    PlotterLines irr_3(test, 3, 13, 21, 2);
+    PlotterLines ref_3(test, 3, 13, 24, 2);
+    
+    PlotterLines irr_4(test, 3, 13, 28, 2);
+    PlotterLines ref_4(test, 3, 13, 31, 2);
+
+    
+    // Choose which plot you want to make.
+    if (which_plot=="irr"){
+        graph_section(which_plot,irr_0, irr_1, irr_2, irr_3, irr_4);
     }
-    else if (which_plot=="ALCT_top"){
-        graph_section(which_plot,ALCT_top);
+    else if (which_plot=="ref"){
+        graph_section(which_plot,ref_0, ref_1, ref_2, ref_3, ref_4);
     }
-    else if (which_plot=="ALCT_bottom"){
-        graph_section(which_plot,ALCT_bottom);
+
+}
+
+// Resizes the graphs
+PlotterLines resize(PlotterLines graph_line){
+    for (int g=graph_line.lines[0].size()-1; g>0; g=g-1){
+        if (graph_line.lines[0].at(g)==graph_line.lines[0].at(g-1)){
+            graph_line.lines[0].pop_back();
+            graph_line.lines[1].pop_back();
+        }
+        else{
+            continue;
+        }
     }
-    else if (which_plot=="CLCT_no"){
-        graph_section(which_plot,CLCT_no);
+    return graph_line;
+}
+
+// Makes the graphs
+TGraph* make_graph(PlotterLines graph_line){
+    TGraph *graph = new TGraph(graph_line.lines[0].size());
+    for (int i=0; i<graph_line.lines[0].size(); i++){
+        graph->SetPoint(i,graph_line.lines[0].at(i), graph_line.lines[1].at(i));
     }
-    else if (which_plot=="CLCT_top"){
-        graph_section(which_plot,CLCT_top);
-    }
-    else if (which_plot=="CLCT_bottom"){
-        graph_section(which_plot,CLCT_bottom);
-    }
-    else if (which_plot=="LCT_no"){
-        graph_section(which_plot,LCT_no);
-    }
-    else if (which_plot=="LCT_top"){
-        graph_section(which_plot,LCT_top);
-    }
-    else if (which_plot=="LCT_bottom"){
-        graph_section(which_plot,LCT_bottom);
-    }
+    return graph;
 }
 
 
-int graph_section(string filename, PlotterLines graphLines){
+int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4){
 	
-    Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack};
+    Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack, kMagenta};
+    
+
+    //Make sure that the vectors have the right length.
+    PlotterLines line_0 = resize(graphLines0);
+    PlotterLines line_1 = resize(graphLines1);
+    PlotterLines line_2 = resize(graphLines2);
+    PlotterLines line_3 = resize(graphLines3);
+    PlotterLines line_4 = resize(graphLines4);
     
     
-	int number_of_points=graphLines.size;
-	int number_of_lines=4;
-
-
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
@@ -75,8 +96,6 @@ int graph_section(string filename, PlotterLines graphLines){
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
 
-
-
 	//make the canvas, set its properties
 	TCanvas *canvas = new TCanvas("c2","c2",50,50,W,H);
 	canvas->SetFillColor(0);
@@ -89,61 +108,78 @@ int graph_section(string filename, PlotterLines graphLines){
 	canvas->SetBottomMargin( B/H );
 	canvas->cd();
 
-
 	//the legend happens
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
 
+    // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
+    TGraph* graph_0 = make_graph(line_0);
+    TGraph* graph_1 = make_graph(line_1);
+    TGraph* graph_2 = make_graph(line_2);
+    TGraph* graph_3 = make_graph(line_3);
+    TGraph* graph_4 = make_graph(line_4);
+    
+    //Line colors!
+    graph_0->SetLineColor(colors[0]);
+    graph_1->SetLineColor(colors[1]);
+    graph_2->SetLineColor(colors[2]);
+    graph_3->SetLineColor(colors[3]);
+    graph_4->SetLineColor(colors[4]);
+    
+    // Make the markers all round and pretty
+    graph_0->SetMarkerStyle(20);
+    graph_0->SetMarkerSize(0.8);
+    graph_0->SetMarkerColor(colors[0]);
+    graph_1->SetMarkerStyle(20);
+    graph_1->SetMarkerSize(0.8);
+    graph_1->SetMarkerColor(colors[1]);
+    graph_2->SetMarkerStyle(20);
+    graph_2->SetMarkerSize(0.8);
+    graph_2->SetMarkerColor(colors[2]);
+    graph_3->SetMarkerStyle(20);
+    graph_3->SetMarkerSize(0.8);
+    graph_3->SetMarkerColor(colors[3]);
+    graph_4->SetMarkerStyle(20);
+    graph_4->SetMarkerSize(0.8);
+    graph_4->SetMarkerColor(colors[4]);
+    
+    //More formatting
+    graph_0->SetLineWidth(2.0);
+    graph_1->SetLineWidth(2.0);
+    graph_2->SetLineWidth(2.0);
+    graph_3->SetLineWidth(2.0);
+    graph_4->SetLineWidth(2.0);
+    
+    // Still the legend, label by hand
+    legend->AddEntry(graph_0, "Run 0");
+    legend->AddEntry(graph_1, "Run 1");
+    legend->AddEntry(graph_2, "Run 2");
+    legend->AddEntry(graph_3, "Run 3");
+    legend->AddEntry(graph_4, "Run 4");
 
-	//loop over the various files, and the points in it
-	for (int j=0; j<number_of_lines; j++){
-			//Creat the graph by looping over the number of points
-		TGraph *graph = new TGraph(number_of_points);
-		for (int i=0; i<number_of_points; i++){
-            if (graphLines.lines[j].at(i)<0){
-                graph->SetPoint(i, graphLines.voltages.at(i),0);
-            }
-            else{
-                graph->SetPoint(i,graphLines.voltages.at(i),graphLines.lines[j].at(i));
-			}
-        }
-
-		//Some things to make it look nice, using dummy variables for now :)
-		graph->GetXaxis()->SetTitle("Voltage (kV)");
-		graph->GetYaxis()->SetTitle("Hertz");
-		graph->SetLineColor(colors[j]);
-		graph->SetLineWidth(2.0);
-        string hello = "Run ";
-        string name_thing = hello+to_string(j);
-        char const *name = name_thing.c_str();
-		legend->AddEntry(graph, name);
-		graph->SetMaximum(450);
-        graph->GetXaxis()->SetRangeUser(2,4);
-        
-        //Some things that can be fussed with
-        graph->SetMarkerStyle(20);
-        graph->SetMarkerSize(0.8);
-        graph->SetMarkerColor(colors[j]);
-        
-        if (j==0){
-            graph->SetTitle(filename.c_str());
-			graph->Draw();
-		}
-		else{
-        
-			graph->Draw("SAME P L");
-		}
-
-
-	}
+    // Make a multigraph to put all the stuff into and draw all at once.
+    TMultiGraph *mg = new TMultiGraph();
+    
+    mg->Add(graph_0);
+    mg->Add(graph_1);
+    mg->Add(graph_2);
+    mg->Add(graph_3);
+    mg->Add(graph_4);
+    
+    mg->Draw("ALP");
+    
+    // Draw and label
+    mg->GetXaxis()->SetTitle("Voltage (kV)");
+	mg->GetYaxis()->SetTitle("Current (pA)");
+    mg->GetXaxis()->SetRangeUser(2,4);
 
 	legend->Draw("SAME");
 
+    // Locate where it goes and gets saved, may have to be changed.
 	string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
 	canvas;
-
 
 	return 0;
 }
