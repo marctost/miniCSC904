@@ -112,20 +112,26 @@ int graph_section(string filename, PlotterLines graphLines){
 		graph->GetXaxis()->SetTitle("Voltage (kV)");
 		graph->GetYaxis()->SetTitle("Hertz");
 		graph->SetLineColor(colors[j]);
-		graph->SetLineWidth(3.0);
+		graph->SetLineWidth(2.0);
         string hello = "Run ";
         string name_thing = hello+to_string(j);
         char const *name = name_thing.c_str();
 		legend->AddEntry(graph, name);
 		graph->SetMaximum(450);
         graph->GetXaxis()->SetRangeUser(2,4);
+        
+        //Some things that can be fussed with
+        graph->SetMarkerStyle(20);
+        graph->SetMarkerSize(0.8);
+        graph->SetMarkerColor(colors[j]);
+        
         if (j==0){
             graph->SetTitle(filename.c_str());
 			graph->Draw();
 		}
 		else{
         
-			graph->Draw("SAME");
+			graph->Draw("SAME P L");
 		}
 
 
