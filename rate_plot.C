@@ -139,9 +139,10 @@ int graph_section(string filename, PlotterLines graphLines){
 
 	legend->Draw("SAME");
 
-	string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
+	//string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
 	canvas->Update();
-	canvas->SaveAs(saveWhere.c_str());
+	//canvas->SaveAs(saveWhere.c_str());
+        canvas->Print(filename+".png");
 	canvas;
 
 
