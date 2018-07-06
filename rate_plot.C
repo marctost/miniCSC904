@@ -3,7 +3,7 @@
 int graph_section(string filename, PlotterLines graphLines);
 
 void excel_stuff(string which_plot) {
-    ExcelSheet test("final_numbers.csv");
+    ExcelSheet test("final_numbers_rate.csv");
 
     PlotterLines ALCT_no(test, 2, 27, 2);
     PlotterLines CLCT_no(test, 2, 27, 7);
