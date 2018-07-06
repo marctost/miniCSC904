@@ -32,3 +32,12 @@ Dark Current plotting-----
 * Copy and paste the appropriate values below row 3 for all runs, make sure to include timing.
 * Export to the spreadsheet into a .csv file, with the same name.
 * Run the command: "bash make_dark_plots.sh"
+
+
+------------------------
+
+Gas gain plotting ------
+* Open spreadsheet called "analysis_page_gasGain.xlsx"
+* Copy the appropriate values into/below row 4
+* Convert to .csv file with same name.
+* Run the command: "bash make_gas_plots.sh"

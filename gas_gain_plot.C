@@ -1,41 +1,41 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4);
+int graph_section(string filename, string source_or_no, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4);
 PlotterLines resize(PlotterLines graph_line);
-TGraph* make_graph(PlotterLines graph_line);
+TGraph* make_graph(PlotterLines graph_line, int use);
 
-void dark_current_plot(string which_plot) {
-    ExcelSheet test("analysis_page_darkCurrent.csv");
+void gas_gain_plot(string which_plot, string source_or_no) {
+    ExcelSheet test("analysis_page_gasGain.csv");
 
     
-    // This is the inportant bit! The first number refers to the excel sheet above. The second number is
+    // This is the important bit! The first number refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
     // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines irr_0(test, 3, 13, 0, 2);
-    PlotterLines ref_0(test, 3, 13, 3, 2);
+    PlotterLines irr_0(test, 3, 22, 0, 3);
+    PlotterLines ref_0(test, 3, 22, 0, 3);
     
-    PlotterLines irr_1(test, 3, 13, 7, 2);
-    PlotterLines ref_1(test, 3, 13, 10, 2);
+    PlotterLines irr_1(test, 3, 16, 4, 3);
+    PlotterLines ref_1(test, 3, 18, 7, 3);
     
-    PlotterLines irr_2(test, 3, 13, 14, 2);
-    PlotterLines ref_2(test, 3, 13, 17, 2);
+    PlotterLines irr_2(test, 3, 13, 11, 3);
+    PlotterLines ref_2(test, 3, 13, 14, 3);
     
-    PlotterLines irr_3(test, 3, 13, 21, 2);
-    PlotterLines ref_3(test, 3, 13, 24, 2);
+    PlotterLines irr_3(test, 3, 13, 18, 3);
+    PlotterLines ref_3(test, 3, 13, 21, 3);
     
-    PlotterLines irr_4(test, 3, 13, 28, 2);
-    PlotterLines ref_4(test, 3, 13, 31, 2);
+    PlotterLines irr_4(test, 3, 13, 25, 3);
+    PlotterLines ref_4(test, 3, 13, 29, 3);
 
     
     // Choose which plot you want to make.
     if (which_plot=="irr"){
-        graph_section(which_plot,irr_0, irr_1, irr_2, irr_3, irr_4);
+        graph_section(which_plot,source_or_no, irr_0, irr_1, irr_2, irr_3, irr_4);
     }
     else if (which_plot=="ref"){
-        graph_section(which_plot,ref_0, ref_1, ref_2, ref_3, ref_4);
+        graph_section(which_plot,source_or_no, ref_0, ref_1, ref_2, ref_3, ref_4);
     }
 
 }
@@ -46,28 +46,44 @@ PlotterLines resize(PlotterLines graph_line){
         if (graph_line.lines[0].at(g)==graph_line.lines[0].at(g-1)){
             graph_line.lines[0].pop_back();
             graph_line.lines[1].pop_back();
+            graph_line.lines[2].pop_back();
         }
         else{
             continue;
+        }
+    }
+    for (int j=0; j<graph_line.lines[0].size(); j++){
+        if (graph_line.lines[1].at(j)<0){
+            graph_line.lines[1].at(j)=0.1;
+        }
+        if (graph_line.lines[2].at(j)<0){
+            graph_line.lines[2].at(j)=0.1;
         }
     }
     return graph_line;
 }
 
 // Makes the graphs
-TGraph* make_graph(PlotterLines graph_line){
+TGraph* make_graph(PlotterLines graph_line, int use){
     TGraph *graph = new TGraph(graph_line.lines[0].size());
     for (int i=0; i<graph_line.lines[0].size(); i++){
-        graph->SetPoint(i,graph_line.lines[0].at(i), graph_line.lines[1].at(i));
+        graph->SetPoint(i,graph_line.lines[0].at(i), graph_line.lines[use].at(i));
     }
     return graph;
 }
 
 
-int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4){
+int graph_section(string filename, string source_or_no, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4){
 	
     Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack, kMagenta};
     
+    int use;
+    if (source_or_no=="source"){
+        use=2;
+    }
+    else if (source_or_no=="no"){
+        use=1;
+    }
 
     //Make sure that the vectors have the right length.
     PlotterLines line_0 = resize(graphLines0);
@@ -113,11 +129,11 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
 	legend->SetBorderSize(1);
 
     // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
-    TGraph* graph_0 = make_graph(line_0);
-    TGraph* graph_1 = make_graph(line_1);
-    TGraph* graph_2 = make_graph(line_2);
-    TGraph* graph_3 = make_graph(line_3);
-    TGraph* graph_4 = make_graph(line_4);
+    TGraph* graph_0 = make_graph(line_0, use);
+    TGraph* graph_1 = make_graph(line_1, use);
+    TGraph* graph_2 = make_graph(line_2, use);
+    TGraph* graph_3 = make_graph(line_3, use);
+    TGraph* graph_4 = make_graph(line_4, use);
     
     //Line colors!
     graph_0->SetLineColor(colors[0]);
@@ -166,17 +182,26 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     mg->Add(graph_3);
     mg->Add(graph_4);
     
-    mg->Draw("ALP");
+    // title!
+    mg->SetTitle(filename.c_str());
     
-    // Draw and label
+    //Set the plot to log on the y-axis
+    canvas->SetLogy();
+    mg->Draw("ALP");
+    canvas->SetLogy();
+    
+    //  label
     mg->GetXaxis()->SetTitle("Voltage (kV)");
-	mg->GetYaxis()->SetTitle("Current (pA)");
+    mg->GetYaxis()->SetTitle("Current (pA)");
+    
+    //mg->GetXaxis()->SetTitle("Voltage (kV)");
+	//mg->GetYaxis()->SetTitle("Current (pA)");
     mg->GetXaxis()->SetRangeUser(2,4);
 
 	legend->Draw("SAME");
 
     // Locate where it goes and gets saved, may have to be changed.
-	string saveWhere = "/Users/marctost/Desktop/darkcurrent_"+filename+".png";
+	string saveWhere = "/Users/marctost/Desktop/gas_gain_"+source_or_no+"_"+filename+".png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
 	canvas;
