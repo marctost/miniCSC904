@@ -11,11 +11,11 @@ public:
       vector<string> tmpSplit;
       boost::split(tmpSplit, line, [](char c){return c == ',';});
       Row.push_back(tmpSplit);
-
+        
       if(Column.size() == 0) {
 	Column.resize(tmpSplit.size());
       } else if(Column.size() < tmpSplit.size()) {
-	exit(1);
+    exit(1);
       }
       for(int i = 0; i < tmpSplit.size(); i++) {
 	Column[i].push_back(tmpSplit.at(i));

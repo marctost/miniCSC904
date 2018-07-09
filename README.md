@@ -41,3 +41,24 @@ Gas gain plotting ------
 * Copy the appropriate values into/below row 4
 * Convert to .csv file with same name.
 * Run the command: "bash make_gas_plots.sh"
+
+
+---------------------
+
+strip-to-strip Plotting ------
+* Open spreadsheet called "analysis_page_strip.xlsx"
+* Copy the appropriate values into/below row 4, include timing.
+* Convert to .csv file with same name.
+* Run the command: "bash make_strip_plots.sh"
+
+
+------------------
+
+Cluster charge plotting --------
+* Open spreadsheet called "analysis_page_cluster_charge.xlsx"
+* Copy the appropriate values into/below row 3. Make sure to follow timing instructions (i.e. add two hours). 
+    * Also note here that you cannot just copy and paste entire columns, it is important that each value lines up with its corresponding hole. 
+    * Also, the program doesn't like things formated like: (2,1). So avoid that.
+* Convert to .csv file with same name.
+
+
