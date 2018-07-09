@@ -90,3 +90,11 @@ Cluster charge plotting --------
 * Run "bash make_cluster_plots.sh"
 
 
+------------------
+
+Strip-to-strip plotting
+* Copy and paste appropriate values into analysis_page_strip
+* Convert to .csv.
+* Run "root -l -q strip_plot.C"
+
+

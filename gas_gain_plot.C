@@ -13,9 +13,9 @@ void gas_gain_plot(string which_plot, string source_or_no) {
     // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
-    
-    PlotterLines irr_0(test, 3, 22, 0, 3);
-    PlotterLines ref_0(test, 3, 22, 0, 3);
+   
+    PlotterLines irr_0(test, 3, 21, 0, 3);
+    PlotterLines ref_0(test, 3, 21, 0, 3);
     
     PlotterLines irr_1(test, 3, 16, 4, 3);
     PlotterLines ref_1(test, 3, 18, 7, 3);
@@ -27,7 +27,7 @@ void gas_gain_plot(string which_plot, string source_or_no) {
     PlotterLines ref_3(test, 3, 13, 21, 3);
     
     PlotterLines irr_4(test, 3, 13, 25, 3);
-    PlotterLines ref_4(test, 3, 13, 29, 3);
+    PlotterLines ref_4(test, 3, 14, 28, 3);
 
     
     // Choose which plot you want to make.

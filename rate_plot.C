@@ -1,8 +1,8 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines);
+int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no);
 
-void rate_plot(string which_plot) {
+void rate_plot(string which_plot, string subtract_or_no) {
     ExcelSheet test("final_numbers_rate.csv");
 
     // This is the inportant bit! The first number refers to the excel sheet above. The second number is
@@ -11,62 +11,75 @@ void rate_plot(string which_plot) {
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines ALCT_no(test, 2, 27, 2, 4);
-    PlotterLines CLCT_no(test, 2, 27, 7, 4);
-    PlotterLines LCT_no(test, 2, 27, 12, 4);
+    PlotterLines ALCT_no(test, 2, 27, 2, 5);
+    PlotterLines CLCT_no(test, 2, 27, 8, 5);
+    PlotterLines LCT_no(test, 2, 27, 14, 5);
 
-    PlotterLines ALCT_top(test, 33, 58, 2, 4);
-    PlotterLines CLCT_top(test, 33, 58, 7, 4);
-    PlotterLines LCT_top(test, 33, 58, 12,4 );
+    PlotterLines ALCT_top(test, 33, 58, 2, 5);
+    PlotterLines CLCT_top(test, 33, 58, 8, 5);
+    PlotterLines LCT_top(test, 33, 58, 14, 5);
 
-    PlotterLines ALCT_bottom(test, 64, 89, 2, 4);
-    PlotterLines CLCT_bottom(test, 64, 89, 7, 4);
-    PlotterLines LCT_bottom(test, 64, 89, 12, 4);
+    PlotterLines ALCT_bottom(test, 64, 89, 2, 5);
+    PlotterLines CLCT_bottom(test, 64, 89, 8, 5);
+    PlotterLines LCT_bottom(test, 64, 89, 14, 5);
     
     
     // Choose which plot you do.
-    
     if (which_plot=="ALCT_no"){
-        graph_section(which_plot,ALCT_no);
+        graph_section(which_plot,ALCT_no, ALCT_no, subtract_or_no);
     }
     else if (which_plot=="ALCT_top"){
-        graph_section(which_plot,ALCT_top);
+        graph_section(which_plot,ALCT_top, ALCT_no, subtract_or_no);
     }
     else if (which_plot=="ALCT_bottom"){
-        graph_section(which_plot,ALCT_bottom);
+        graph_section(which_plot,ALCT_bottom, ALCT_no, subtract_or_no);
     }
     else if (which_plot=="CLCT_no"){
-        graph_section(which_plot,CLCT_no);
+        graph_section(which_plot,CLCT_no, CLCT_no, subtract_or_no);
     }
     else if (which_plot=="CLCT_top"){
-        graph_section(which_plot,CLCT_top);
+        graph_section(which_plot,CLCT_top, CLCT_no, subtract_or_no);
     }
     else if (which_plot=="CLCT_bottom"){
-        graph_section(which_plot,CLCT_bottom);
+        graph_section(which_plot,CLCT_bottom, CLCT_no, subtract_or_no);
     }
     else if (which_plot=="LCT_no"){
-        graph_section(which_plot,LCT_no);
+        graph_section(which_plot,LCT_no, LCT_no, subtract_or_no);
     }
     else if (which_plot=="LCT_top"){
-        graph_section(which_plot,LCT_top);
+        graph_section(which_plot,LCT_top, LCT_no, subtract_or_no);
     }
     else if (which_plot=="LCT_bottom"){
-        graph_section(which_plot,LCT_bottom);
+        graph_section(which_plot,LCT_bottom, LCT_no, subtract_or_no);
     }
 }
 
 
-int graph_section(string filename, PlotterLines graphLines){
+int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no){
 	
+
+    
     // These are the colors that will go into the plot.
     Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack};
     
     
 	int number_of_points=graphLines.size;
 	//Number of lines that are going to be put on the plot
-    int number_of_lines=4;
+    int number_of_lines=5;
 
 
+    // if sub_or_no is sub, then don't add the background back it (it has been subtracted in the excel document). If its no, then add the background back in.
+
+    if (subtract_or_no=="subtract"){
+        for (int q=0; q<number_of_lines; q++){
+            for (int w=0; w<number_of_points; w++){
+                subtraction.lines[q].at(w)=0;
+            }
+        }
+    }
+    
+    
+    
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
@@ -101,6 +114,7 @@ int graph_section(string filename, PlotterLines graphLines){
 	canvas->cd();
 
 
+    
 	//the legend happens
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
@@ -115,7 +129,7 @@ int graph_section(string filename, PlotterLines graphLines){
                 graph->SetPoint(i, graphLines.voltages.at(i),0);
             }
             else{
-                graph->SetPoint(i,graphLines.voltages.at(i),graphLines.lines[j].at(i));
+                graph->SetPoint(i,graphLines.voltages.at(i),graphLines.lines[j].at(i)+ subtraction.lines[j].at(i));
 			}
         }
 
@@ -152,7 +166,7 @@ int graph_section(string filename, PlotterLines graphLines){
 	legend->Draw("SAME");
 
     // Save the plot to the desktop.
-	string saveWhere = "/Users/marctost/Desktop/"+filename+".png";
+	string saveWhere = "/Users/marctost/Desktop/"+filename+"_"+subtract_or_no+".png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
     //canvas->Print(filename+".png");

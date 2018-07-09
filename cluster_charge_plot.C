@@ -66,24 +66,24 @@ TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines ru
     // Note the the first number is the "point number" and will always be 0-4, the second number the the run number (will be accumulated charge at some point), and the last number is charge mean
     if (norm_or_no=="irr"){
         graph->SetPoint(0, 0, run_0.lines[0].at(i)/Get_average_val_irr(run_0));
-        graph->SetPoint(1, 1, run_1.lines[0].at(i)/Get_average_val_irr(run_1));
-        graph->SetPoint(2, 2, run_2.lines[0].at(i)/Get_average_val_irr(run_2));
-        graph->SetPoint(3, 3, run_3.lines[0].at(i)/Get_average_val_irr(run_3));
-        graph->SetPoint(4, 4, run_4.lines[0].at(i)/Get_average_val_irr(run_4));
+        graph->SetPoint(1, 18, run_1.lines[0].at(i)/Get_average_val_irr(run_1));
+        graph->SetPoint(2, 26, run_2.lines[0].at(i)/Get_average_val_irr(run_2));
+        graph->SetPoint(3, 65, run_3.lines[0].at(i)/Get_average_val_irr(run_3));
+        graph->SetPoint(4, 125, run_4.lines[0].at(i)/Get_average_val_irr(run_4));
     }
     else if (norm_or_no=="ref"){
         graph->SetPoint(0, 0, run_0.lines[0].at(i)/Get_average_val_ref(run_0));
-        graph->SetPoint(1, 1, run_1.lines[0].at(i)/Get_average_val_ref(run_1));
-        graph->SetPoint(2, 2, run_2.lines[0].at(i)/Get_average_val_ref(run_2));
-        graph->SetPoint(3, 3, run_3.lines[0].at(i)/Get_average_val_ref(run_3));
-        graph->SetPoint(4, 4, run_4.lines[0].at(i)/Get_average_val_ref(run_4));
+        graph->SetPoint(1, 18, run_1.lines[0].at(i)/Get_average_val_ref(run_1));
+        graph->SetPoint(2, 26, run_2.lines[0].at(i)/Get_average_val_ref(run_2));
+        graph->SetPoint(3, 65, run_3.lines[0].at(i)/Get_average_val_ref(run_3));
+        graph->SetPoint(4, 125, run_4.lines[0].at(i)/Get_average_val_ref(run_4));
     }
     else{
         graph->SetPoint(0, 0, run_0.lines[0].at(i));
-        graph->SetPoint(1, 1, run_1.lines[0].at(i));
-        graph->SetPoint(2, 2, run_2.lines[0].at(i));
-        graph->SetPoint(3, 3, run_3.lines[0].at(i));
-        graph->SetPoint(4, 4, run_4.lines[0].at(i));
+        graph->SetPoint(1, 18, run_1.lines[0].at(i));
+        graph->SetPoint(2, 26, run_2.lines[0].at(i));
+        graph->SetPoint(3, 65, run_3.lines[0].at(i));
+        graph->SetPoint(4, 125, run_4.lines[0].at(i));
     }
     return graph;
 }
@@ -227,7 +227,7 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
 
     
     //  label
-    mg->GetXaxis()->SetTitle("Run #");
+    mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
     mg->GetYaxis()->SetTitle("ADC counts");
     
 
