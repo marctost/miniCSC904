@@ -5,19 +5,17 @@ Created on Fri Feb 10 09:07:37 2017
 @author: Jameson
 """
 
+#NOTE: Set chamber to True for StS, and False for Dark Current!
+
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-filename = 'sts-20180118-run11/sts_20180118_x3_300.txt'
-#filename = 'sts-20171220-run10/sts_20171220_x1_300'
-
-#filename = 'Run0/Dark_current_13092017_RefL_3750V_Source'
-#filename = 'Run0/Sts_10092017_X4_300V'
-chamber = True #almost always true O: true for Sts, false for dark current
+filename = 'sts-20180118-run11/sts_20180118_x3_300.txt' #input text file
+chamber = True #almost always true O: True for Sts, False for dark current
 points = 1000000
-
 dt = np.dtype([('time','S19'), ('current', float)])
+
 def expfit(x,a,b,c,d,e):
     return a * np.exp(-b * x) + c * np.exp(-d * x) + e
 
@@ -32,8 +30,9 @@ for index in range(0,np.size(readin)):
     time[index] = readin[index][0]
     amps[index] = readin[index][1]
 
+# --------------------------------------------------
+
 if chamber:
-    
     filtamps = amps[amps > 0]
     flength = np.size(filtamps)
     filtamps = filtamps[np.argmax(amps[0:int(length/10)]):min(flength,points)-1]
@@ -57,7 +56,6 @@ if chamber:
     rms = np.sqrt(np.average((no_cap[int(flength * 0.5):] - avg) ** 2))
 
 else:
-
     avg = np.average(amps)
     rms = np.sqrt(np.average((amps - avg) ** 2))
     
@@ -68,6 +66,8 @@ else:
     
     uplim = np.ones(length) * (avg + 3 * rms)
     lolim = np.ones(length) * (avg - 3 * rms)
+
+# --------------------------------------------------
     
 if chamber:
    # plt.axis([0,int(flength * 2),0,1e-10])
@@ -87,6 +87,9 @@ else:
 plt.xlabel('Point Number')
 plt.ylabel('Current (A)')
 print(filename)
+
+# --------------------------------------------------
+
 if chamber:
     print('Parameters: ' + str(popt[0])+ '  ' + str(popt[1])+ '  ' + str(popt[2])+ '  ' + str(popt[3])+ '  ' + str(popt[4]))
     print('Points: ' + str(min(points,flength)))
