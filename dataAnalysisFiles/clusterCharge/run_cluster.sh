@@ -1,5 +1,6 @@
 #!/bin/bash
 # This code contains the SSH password, so be careful when sharing.
+# Make sure there is a newline character at the end of every line in "cluster_files.txt"
 
 # To keep thing clean in a dangerous way
 # rm *.png
@@ -21,16 +22,24 @@ while IFS= read -r line; do
    file_times+=($file_unraw)
 done<"$file_clusters"
 
-# decide whether or not to include No Source
+# --------------------------------------------------
+
+# Decide whether or not to include No Source ----
+#following line detects the number of ROOT files
 len_files=${#file_times[@]}
-# Chamber 5
+
+# Chamber 5:
 # switch_layer=$((len_files-2))
 # [ $switch_layer -eq 4 ] && holes=(${holes[@]:1})
-# Chamber GIF
+# Chamber GIF:
+# If 12 root files copied, code will assume there is no No_Source file;
+# if 13 root files, code will assume the first file is the No_Source one
 switch_layer=$((len_files-6))
 [ $switch_layer -eq 6 ] && holes=(${holes[@]:1})
 
-# write results to text file
+# --------------------------------------------------
+
+# Write results to text file ----
 [ -f results_fit.txt ] && rm results_fit.txt
 for (( i=0; i<$len_files; i++ )); do
    # May not work without sleep

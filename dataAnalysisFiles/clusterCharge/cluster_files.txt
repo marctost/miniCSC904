@@ -1,3 +1,4 @@
+emume42.cern.ch:/data/cscme42/current/csc_00000001_EmuRUI01_STEP_27s_000_180702_141444_UTC.raw
 emume42.cern.ch:/data/cscme42/current/csc_00000001_EmuRUI01_STEP_27s_000_180702_151451_UTC.raw
 emume42.cern.ch:/data/cscme42/current/csc_00000001_EmuRUI01_STEP_27s_000_180702_151907_UTC.raw
 emume42.cern.ch:/data/cscme42/current/csc_00000001_EmuRUI01_STEP_27s_000_180702_152315_UTC.raw
