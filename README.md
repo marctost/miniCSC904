@@ -60,5 +60,6 @@ Cluster charge plotting --------
     * Also note here that you cannot just copy and paste entire columns, it is important that each value lines up with its corresponding hole. 
     * Also, the program doesn't like things formated like: (2,1). So avoid that.
 * Convert to .csv file with same name.
+* Run "bash make_cluster_plots.sh"
 
 
