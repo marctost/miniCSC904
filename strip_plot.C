@@ -15,12 +15,11 @@ void strip_plot() {
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines hole_num(test, 2, 9, 0, 2);
-    PlotterLines run_0(test, 2, 9, 4, 2);
-    PlotterLines run_1(test, 2, 9, 8, 2);
-    PlotterLines run_2(test, 2, 9, 12, 2);
-    PlotterLines run_3(test, 2, 9, 16, 2);
-    PlotterLines run_4(test, 2, 9, 20, 2);
+    PlotterLines run_0(test, 2, 9, 0, 2);
+    PlotterLines run_1(test, 2, 9, 4, 2);
+    PlotterLines run_2(test, 2, 9, 8, 2);
+    PlotterLines run_3(test, 2, 9, 12, 2);
+    PlotterLines run_4(test, 2, 9, 16, 2);
 
     graph_section(run_0, run_1, run_2, run_3, run_4);
 }

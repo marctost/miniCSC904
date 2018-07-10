@@ -1,8 +1,8 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no);
+int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type);
 
-void rate_plot(string which_plot, string subtract_or_no) {
+void rate_plot(string which_plot, string subtract_or_no, string irr_or_ref, string type) {
     ExcelSheet test("final_numbers_rate.csv");
 
     // This is the inportant bit! The first number refers to the excel sheet above. The second number is
@@ -11,9 +11,9 @@ void rate_plot(string which_plot, string subtract_or_no) {
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines ALCT_no(test, 2, 27, 2, 5);
-    PlotterLines CLCT_no(test, 2, 27, 8, 5);
-    PlotterLines LCT_no(test, 2, 27, 14, 5);
+    PlotterLines ALCT_dark(test, 2, 27, 2, 5);
+    PlotterLines CLCT_dark(test, 2, 27, 8, 5);
+    PlotterLines LCT_dark(test, 2, 27, 14, 5);
 
     PlotterLines ALCT_top(test, 33, 58, 2, 5);
     PlotterLines CLCT_top(test, 33, 58, 8, 5);
@@ -25,42 +25,75 @@ void rate_plot(string which_plot, string subtract_or_no) {
     
     
     // Choose which plot you do.
-    if (which_plot=="ALCT_no"){
-        graph_section(which_plot,ALCT_no, ALCT_no, subtract_or_no);
+    if (which_plot=="ALCT_dark"){
+        graph_section(which_plot,ALCT_dark, ALCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="ALCT_top"){
-        graph_section(which_plot,ALCT_top, ALCT_no, subtract_or_no);
+        graph_section(which_plot,ALCT_top, ALCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="ALCT_bottom"){
-        graph_section(which_plot,ALCT_bottom, ALCT_no, subtract_or_no);
+        graph_section(which_plot,ALCT_bottom, ALCT_dark, subtract_or_no, irr_or_ref, type);
     }
-    else if (which_plot=="CLCT_no"){
-        graph_section(which_plot,CLCT_no, CLCT_no, subtract_or_no);
+    else if (which_plot=="CLCT_dark"){
+        graph_section(which_plot,CLCT_dark, CLCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="CLCT_top"){
-        graph_section(which_plot,CLCT_top, CLCT_no, subtract_or_no);
+        graph_section(which_plot,CLCT_top, CLCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="CLCT_bottom"){
-        graph_section(which_plot,CLCT_bottom, CLCT_no, subtract_or_no);
+        graph_section(which_plot,CLCT_bottom, CLCT_dark, subtract_or_no, irr_or_ref, type);
     }
-    else if (which_plot=="LCT_no"){
-        graph_section(which_plot,LCT_no, LCT_no, subtract_or_no);
+    else if (which_plot=="LCT_dark"){
+        graph_section(which_plot,LCT_dark, LCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="LCT_top"){
-        graph_section(which_plot,LCT_top, LCT_no, subtract_or_no);
+        graph_section(which_plot,LCT_top, LCT_dark, subtract_or_no, irr_or_ref, type);
     }
     else if (which_plot=="LCT_bottom"){
-        graph_section(which_plot,LCT_bottom, LCT_no, subtract_or_no);
+        graph_section(which_plot,LCT_bottom, LCT_dark, subtract_or_no, irr_or_ref, type);
     }
 }
 
 
-int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no){
+int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type){
 	
+    TString title;
+    TString sub;
+    TString type_name;
+    TString layer;
+    if (subtract_or_no=="subtract"){
+        sub = ", Background subtracted";
+    }
+    else if (subtract_or_no=="no"){
+        sub = " ";
+    }
+    
+    if (irr_or_ref=="irr"){
+        layer = " Irradiated layer (3,1),";
+    }
+    else if (irr_or_ref=="ref"){
+        layer = " Reference layer (2,2),";
+    }
+    else if (irr_or_ref=="dark"){
+        layer = " Dark,";
+        sub = " ";
+    }
+    
+    if (type=="LCT"){
+        type_name=" LCT rate";
+    }
+    else if (type=="CLCT"){
+        type_name=" CLCT rate";
+    }
+    else if (type=="ALCT"){
+        type_name=" ALCT rate";
+    }
+    
+    title =layer+type_name+sub;
 
     
     // These are the colors that will go into the plot.
-    Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack};
+    Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4};
     
     
 	int number_of_points=graphLines.size;
@@ -83,7 +116,7 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
-	gStyle->SetTitleAlign(13);
+	gStyle->SetTitleAlign(23);
 
 	//References for changing margins and the size of the canvas
 	int H = 800;
@@ -152,7 +185,7 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
         
         // Draw the plots
         if (j==0){
-            graph->SetTitle(filename.c_str());
+            graph->SetTitle(title);
 			graph->Draw();
 		}
 		else{

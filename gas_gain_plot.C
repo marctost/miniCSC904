@@ -75,16 +75,36 @@ TGraph* make_graph(PlotterLines graph_line, int use){
 
 int graph_section(string filename, string source_or_no, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4){
 	
-    Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack, kMagenta};
+    TString title;
+    TString ref;
+    TString source;
+    
+    
+    Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4};
     
     int use;
     if (source_or_no=="source"){
         use=2;
+        source = ", with source";
     }
     else if (source_or_no=="no"){
         use=1;
+        source = ", no source";
     }
+    if (filename=="irr"){
+        ref = ", irradiated layer";
+    }
+    else if (filename=="ref"){
+        ref = ", reference layer";
+    }
+    
+    
 
+    title = "Gas gain"+source+ref;
+    
+    
+    
+    
     //Make sure that the vectors have the right length.
     PlotterLines line_0 = resize(graphLines0);
     PlotterLines line_1 = resize(graphLines1);
@@ -96,7 +116,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
-	gStyle->SetTitleAlign(13);
+	gStyle->SetTitleAlign(23);
 
 	//References for changing margins and the size of the canvas
 	int H = 800;
@@ -183,7 +203,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     mg->Add(graph_4);
     
     // title!
-    mg->SetTitle(filename.c_str());
+    mg->SetTitle(title);
     
     //Set the plot to log on the y-axis
     canvas->SetLogy();
@@ -192,11 +212,11 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     
     //  label
     mg->GetXaxis()->SetTitle("Voltage (kV)");
-    mg->GetYaxis()->SetTitle("Current (pA)");
     
     //mg->GetXaxis()->SetTitle("Voltage (kV)");
 	//mg->GetYaxis()->SetTitle("Current (pA)");
-    mg->GetXaxis()->SetRangeUser(2,4);
+    mg->GetXaxis()->SetRangeUser(0.2,3.8);
+    
 
 	legend->Draw("SAME");
 

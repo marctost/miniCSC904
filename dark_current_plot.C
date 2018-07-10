@@ -65,10 +65,22 @@ TGraph* make_graph(PlotterLines graph_line){
 
 
 int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4){
-	
-    Color_t colors[] = {kRed, kBlue, kYellow, kCyan, kBlack, kMagenta};
     
+    TString title;
+    TString label;
+    label = "Reference layer";
+    
+    Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4, kBlue-10, kBlue-7, kBlue, kBlue+1, kBlue+4};
+    int color_counter=0;
 
+    if (filename=="irr"){
+        color_counter=5;
+        label = "Irradiated layer";
+    }
+    
+    title = "Dark Current, "+label;
+
+    
     //Make sure that the vectors have the right length.
     PlotterLines line_0 = resize(graphLines0);
     PlotterLines line_1 = resize(graphLines1);
@@ -80,7 +92,7 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
-	gStyle->SetTitleAlign(13);
+	gStyle->SetTitleAlign(23);
 
 	//References for changing margins and the size of the canvas
 	int H = 800;
@@ -120,28 +132,28 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     TGraph* graph_4 = make_graph(line_4);
     
     //Line colors!
-    graph_0->SetLineColor(colors[0]);
-    graph_1->SetLineColor(colors[1]);
-    graph_2->SetLineColor(colors[2]);
-    graph_3->SetLineColor(colors[3]);
-    graph_4->SetLineColor(colors[4]);
+    graph_0->SetLineColor(colors[0+color_counter]);
+    graph_1->SetLineColor(colors[1+color_counter]);
+    graph_2->SetLineColor(colors[2+color_counter]);
+    graph_3->SetLineColor(colors[3+color_counter]);
+    graph_4->SetLineColor(colors[4+color_counter]);
     
     // Make the markers all round and pretty
     graph_0->SetMarkerStyle(20);
     graph_0->SetMarkerSize(0.8);
-    graph_0->SetMarkerColor(colors[0]);
+    graph_0->SetMarkerColor(colors[0+color_counter]);
     graph_1->SetMarkerStyle(20);
     graph_1->SetMarkerSize(0.8);
-    graph_1->SetMarkerColor(colors[1]);
+    graph_1->SetMarkerColor(colors[1+color_counter]);
     graph_2->SetMarkerStyle(20);
     graph_2->SetMarkerSize(0.8);
-    graph_2->SetMarkerColor(colors[2]);
+    graph_2->SetMarkerColor(colors[2+color_counter]);
     graph_3->SetMarkerStyle(20);
     graph_3->SetMarkerSize(0.8);
-    graph_3->SetMarkerColor(colors[3]);
+    graph_3->SetMarkerColor(colors[3+color_counter]);
     graph_4->SetMarkerStyle(20);
     graph_4->SetMarkerSize(0.8);
-    graph_4->SetMarkerColor(colors[4]);
+    graph_4->SetMarkerColor(colors[4+color_counter]);
     
     //More formatting
     graph_0->SetLineWidth(2.0);
@@ -166,12 +178,16 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     mg->Add(graph_3);
     mg->Add(graph_4);
     
+    mg->SetTitle(title);
+    
     mg->Draw("ALP");
     
     // Draw and label
     mg->GetXaxis()->SetTitle("Voltage (kV)");
 	mg->GetYaxis()->SetTitle("Current (pA)");
     mg->GetXaxis()->SetRangeUser(2,4);
+    
+    
 
 	legend->Draw("SAME");
 
