@@ -8,29 +8,28 @@ void dark_current_plot(string which_plot) {
     ExcelSheet test("analysis_page_darkCurrent.csv");
 
     
-    // This is the inportant bit! The first number refers to the excel sheet above. The second number is
-    // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
-    // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
+    // This is the inportant bit! The first value refers to the excel sheet above. The second number is
+    // the row you start on. The second number is the lowest row you go to. The 3rd number is the first column that you're pulling. The
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines irr_0(test, 3, 13, 0, 2);
-    PlotterLines ref_0(test, 3, 13, 3, 2);
+    PlotterLines irr_0(test, 3, 10, 0, 2);
+    PlotterLines ref_0(test, 3, 6, 3, 2);
     
-    PlotterLines irr_1(test, 3, 13, 7, 2);
-    PlotterLines ref_1(test, 3, 13, 10, 2);
+    PlotterLines irr_1(test, 3, 9, 7, 2);
+    PlotterLines ref_1(test, 3, 6, 10, 2);
     
-    PlotterLines irr_2(test, 3, 13, 14, 2);
-    PlotterLines ref_2(test, 3, 13, 17, 2);
+    PlotterLines irr_2(test, 3, 10, 14, 2);
+    PlotterLines ref_2(test, 3, 6, 17, 2);
     
-    PlotterLines irr_3(test, 3, 13, 21, 2);
-    PlotterLines ref_3(test, 3, 13, 24, 2);
+    PlotterLines irr_3(test, 3, 10, 21, 2);
+    PlotterLines ref_3(test, 3, 6, 24, 2);
     
-    PlotterLines irr_4(test, 3, 13, 28, 2);
-    PlotterLines ref_4(test, 3, 13, 31, 2);
+    PlotterLines irr_4(test, 3, 10, 28, 2);
+    PlotterLines ref_4(test, 3, 6, 31, 2);
 
     
-    // Choose which plot you want to make.
+    // Choose which plot you want to make, bash script contains corresponding calls for each.
     if (which_plot=="irr"){
         graph_section(which_plot,irr_0, irr_1, irr_2, irr_3, irr_4);
     }
@@ -40,7 +39,7 @@ void dark_current_plot(string which_plot) {
 
 }
 
-// Resizes the graphs
+// This function makes sure that all the vectors are the right length, and that there are not extra values floating around.
 PlotterLines resize(PlotterLines graph_line){
     for (int g=graph_line.lines[0].size()-1; g>0; g=g-1){
         if (graph_line.lines[0].at(g)==graph_line.lines[0].at(g-1)){
@@ -54,10 +53,12 @@ PlotterLines resize(PlotterLines graph_line){
     return graph_line;
 }
 
-// Makes the graphs
+
+// Creates the graphs themselves. TGraph constructor takes the size of the vector as an argument, and then each point is filled.
 TGraph* make_graph(PlotterLines graph_line){
     TGraph *graph = new TGraph(graph_line.lines[0].size());
     for (int i=0; i<graph_line.lines[0].size(); i++){
+        // The SetPoint function takes (i, x, y) as its arguments, so here it can be seen that side-by-side pairs in the excel document are put into each line.
         graph->SetPoint(i,graph_line.lines[0].at(i), graph_line.lines[1].at(i));
     }
     return graph;
@@ -68,20 +69,21 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     
     TString title;
     TString label;
-    label = "Reference layer";
-    
-    Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4, kBlue-10, kBlue-7, kBlue, kBlue+1, kBlue+4};
+    label = "Irradiated layer";
+    // This variable "color counter" is bumped up to 5 when the reference layer is called, in order to plot the different layers in different colors.
     int color_counter=0;
 
-    if (filename=="irr"){
+    // If statements control the title of the graph
+    if (filename=="ref"){
         color_counter=5;
-        label = "Irradiated layer";
+        label = "Reference layer";
     }
-    
     title = "Dark Current, "+label;
 
+    // Colors used, irradiated first and then reference layer colors
+    Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4, kBlue-10, kBlue-7, kBlue, kBlue+1, kBlue+4};
     
-    //Make sure that the vectors have the right length.
+    //Make sure that the vectors have the right length using the above function
     PlotterLines line_0 = resize(graphLines0);
     PlotterLines line_1 = resize(graphLines1);
     PlotterLines line_2 = resize(graphLines2);
@@ -94,17 +96,17 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
 	gStyle->SetOptStat(2210);
 	gStyle->SetTitleAlign(23);
 
-	//References for changing margins and the size of the canvas
+	//References for margins, canvas and the legend
 	int H = 800;
 	int W = H;
 	float T = 0.08*H;
 	float B = 0.12*H;
 	float L = 0.12*W;
 	float R = 0.04*W;
-	float x1_l = 0.38;
+	float x1_l = 0.48;
 	float y1_l = 0.90;
-	float dx_l = 0.20;
-	float dy_l = 0.20;
+	float dx_l = 0.30;
+	float dy_l = 0.30;
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
 
@@ -131,14 +133,14 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     TGraph* graph_3 = make_graph(line_3);
     TGraph* graph_4 = make_graph(line_4);
     
-    //Line colors!
+    // Sets the colors of each graph that has been created above
     graph_0->SetLineColor(colors[0+color_counter]);
     graph_1->SetLineColor(colors[1+color_counter]);
     graph_2->SetLineColor(colors[2+color_counter]);
     graph_3->SetLineColor(colors[3+color_counter]);
     graph_4->SetLineColor(colors[4+color_counter]);
     
-    // Make the markers all round and pretty
+    // Marker style
     graph_0->SetMarkerStyle(20);
     graph_0->SetMarkerSize(0.8);
     graph_0->SetMarkerColor(colors[0+color_counter]);
@@ -162,12 +164,12 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     graph_3->SetLineWidth(2.0);
     graph_4->SetLineWidth(2.0);
     
-    // Still the legend, label by hand
-    legend->AddEntry(graph_0, "Run 0");
-    legend->AddEntry(graph_1, "Run 1");
-    legend->AddEntry(graph_2, "Run 2");
-    legend->AddEntry(graph_3, "Run 3");
-    legend->AddEntry(graph_4, "Run 4");
+    // Label the legend by hand
+    legend->AddEntry(graph_0, "Run 0, 0 mC/cm");
+    legend->AddEntry(graph_1, "Run 1, 53 mC/cm");
+    legend->AddEntry(graph_2, "Run 2, 95 mC/cm");
+    legend->AddEntry(graph_3, "Run 3, 121 mC/cm");
+    legend->AddEntry(graph_4, "Run 4, 149 mC/cm");
 
     // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();

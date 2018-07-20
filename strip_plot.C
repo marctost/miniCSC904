@@ -15,11 +15,11 @@ void strip_plot() {
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines run_0(test, 2, 9, 0, 2);
-    PlotterLines run_1(test, 2, 9, 4, 2);
-    PlotterLines run_2(test, 2, 9, 8, 2);
-    PlotterLines run_3(test, 2, 9, 12, 2);
-    PlotterLines run_4(test, 2, 9, 16, 2);
+    PlotterLines run_0(test, 2, 5, 0, 2);
+    PlotterLines run_1(test, 2, 5, 4, 2);
+    PlotterLines run_2(test, 2, 5, 8, 2);
+    PlotterLines run_3(test, 2, 5, 12, 2);
+    PlotterLines run_4(test, 2, 5, 16, 2);
 
     graph_section(run_0, run_1, run_2, run_3, run_4);
 }
@@ -30,18 +30,19 @@ void strip_plot() {
 TGraph* make_graph(int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
     TGraph *graph = new TGraph(5);
     
-    
-    // Note the the first number is the "point number" and will always be 0-4, the second number the the run number (will be accumulated charge at some point), and the last number is charge mean
+    // Creating the TGraph and filling it with 5 points (number of runs)
+    // The first number is the "point number" and will always be 0-4. the second number is x-axis, which is the accumulated charge, and has to be entered by hand. The last number is charge mean, where the at(i) refers to which wire pair is currently being looked at
 
     graph->SetPoint(0, 0, run_0.lines[1].at(i));
-    graph->SetPoint(1, 18, run_1.lines[1].at(i));
-    graph->SetPoint(2, 26, run_2.lines[1].at(i));
-    graph->SetPoint(3, 65, run_3.lines[1].at(i));
-    graph->SetPoint(4, 125, run_4.lines[1].at(i));
+    graph->SetPoint(1, 53, run_1.lines[1].at(i));
+    graph->SetPoint(2, 95, run_2.lines[1].at(i));
+    graph->SetPoint(3, 121, run_3.lines[1].at(i));
+    graph->SetPoint(4, 149, run_4.lines[1].at(i));
     
     return graph;
 }
 
+// Sets the marker style and coloring for each graph
 TGraph* format_me(TGraph* graph, Color_t color){
     graph->SetLineColor(color);
     graph->SetMarkerStyle(20);
@@ -57,26 +58,27 @@ TGraph* format_me(TGraph* graph, Color_t color){
 int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
 	
     // For this plot, the "i" in graphLine.line[thing].at(i) refers to the wire pair being used,
-    // following the formula i+1 (i.e. at(0) is pair 1, etc
+    // following the formula i+1 i.e. at(0) is pair 1, etc
     
-    Color_t colors[] = {kRed, kRed+3, kRed-6, kOrange-3, kBlue-6, kGreen, kGreen-1, kBlue, kYellow, kCyan, kBlack, kMagenta};
+    
+    Color_t colors[] = {kBlue-10, kBlue-7, kBlue, kBlue+2, kAzure+4, kAzure+1, kRed, kRed+3, kRed-6, kOrange-3, kRed-3, kOrange+4};
     
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
 	gStyle->SetTitleAlign(13);
 
-	//References for changing margins and the size of the canvas
+	//References for margin, canvas and legend
 	int H = 800;
 	int W = H;
 	float T = 0.08*H;
 	float B = 0.12*H;
 	float L = 0.12*W;
 	float R = 0.04*W;
-	float x1_l = 0.38;
+	float x1_l = 0.48;
 	float y1_l = 0.90;
-	float dx_l = 0.20;
-	float dy_l = 0.20;
+	float dx_l = 0.30;
+	float dy_l = 0.30;
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
 
@@ -96,41 +98,27 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
 
-    // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
+    // This function takes the line (which has been correctly sized), and then loops through and returns graphs for the corresponding wire pair
     TGraph* graph_pair_1 = make_graph(0,run_0, run_1, run_2, run_3, run_4);
     TGraph* graph_pair_2 = make_graph(1,run_0, run_1, run_2, run_3, run_4);
     TGraph* graph_pair_3 = make_graph(2,run_0, run_1, run_2, run_3, run_4);
     TGraph* graph_pair_4 = make_graph(3,run_0, run_1, run_2, run_3, run_4);
-    TGraph* graph_pair_5 = make_graph(4,run_0, run_1, run_2, run_3, run_4);
-    TGraph* graph_pair_6 = make_graph(5,run_0, run_1, run_2, run_3, run_4);
-    TGraph* graph_pair_7 = make_graph(6,run_0, run_1, run_2, run_3, run_4);
-    TGraph* graph_pair_8 = make_graph(7,run_0, run_1, run_2, run_3, run_4);
-    
-    
-    //Run the plots through the formater
-    TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[0]);
-    TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[1]);
-    TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[2]);
-    TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[3]);
-    TGraph* fin_graph_pair_5 = format_me(graph_pair_5, colors[4]);
-    TGraph* fin_graph_pair_6 = format_me(graph_pair_6, colors[5]);
-    TGraph* fin_graph_pair_7 = format_me(graph_pair_7, colors[6]);
-    TGraph* fin_graph_pair_8 = format_me(graph_pair_8, colors[7]);
-
     
     
     
-    // Still the legend, label by hand
-    legend->AddEntry(fin_graph_pair_1, "Wire pair 1");
-    legend->AddEntry(fin_graph_pair_2, "Wire pair 2");
-    legend->AddEntry(fin_graph_pair_3, "Wire pair 3");
-    legend->AddEntry(fin_graph_pair_4, "Wire pair 4");
-    legend->AddEntry(fin_graph_pair_5, "Wire pair 5");
-    legend->AddEntry(fin_graph_pair_6, "Wire pair 6");
-    legend->AddEntry(fin_graph_pair_7, "Wire pair 7");
-    legend->AddEntry(fin_graph_pair_8, "Wire pair 8");
+    //Run the plots through the formater, select the desired colors from the list at beginning of function
+    TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[6]);
+    TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[7]);
+    TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[1]);
+    TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
     
-
+    
+    // Label the legend by hand
+    legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (irr layer) (irr)");
+    legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (irr layer)");
+    legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref)");
+    legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref)");
+    
     // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();
     
@@ -138,29 +126,25 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
     mg->Add(fin_graph_pair_2);
     mg->Add(fin_graph_pair_3);
     mg->Add(fin_graph_pair_4);
-    mg->Add(fin_graph_pair_5);
-    mg->Add(fin_graph_pair_6);
-    mg->Add(fin_graph_pair_7);
-    mg->Add(fin_graph_pair_8);
-
     
     canvas->SetLogy();
     
-    // title!
+    // title
     mg->SetTitle("Strip to strip");
     
     mg->Draw("ALP");
 
     
-    //  label
+    //  label axis
     mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
     mg->GetYaxis()->SetTitle("Resistance (TOhms)");
+    // Set the y range so that the legend doesn't cover up any points
     mg->GetYaxis()->SetRangeUser(0.05, 150);
 	legend->Draw("SAME");
 
     
     
-    // Locate where it goes and gets saved, may have to be changed.
+    // Locate where it goes and gets saved
 	string saveWhere = "/Users/marctost/Desktop/strip_to_strip.png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());

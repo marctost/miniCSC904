@@ -8,7 +8,7 @@ void gas_gain_plot(string which_plot, string source_or_no) {
     ExcelSheet test("analysis_page_gasGain.csv");
 
     
-    // This is the important bit! The first number refers to the excel sheet above. The second number is
+    // This is the important bit! The first value (test) refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
     // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
@@ -40,7 +40,7 @@ void gas_gain_plot(string which_plot, string source_or_no) {
 
 }
 
-// Resizes the graphs
+// Resizes the vectors to make sure that no extra points are being plotted than are in excel. Also fixes negative values
 PlotterLines resize(PlotterLines graph_line){
     for (int g=graph_line.lines[0].size()-1; g>0; g=g-1){
         if (graph_line.lines[0].at(g)==graph_line.lines[0].at(g-1)){
@@ -67,6 +67,7 @@ PlotterLines resize(PlotterLines graph_line){
 TGraph* make_graph(PlotterLines graph_line, int use){
     TGraph *graph = new TGraph(graph_line.lines[0].size());
     for (int i=0; i<graph_line.lines[0].size(); i++){
+        // What is plotted is the first column selected on the x axis, and then the column with the number "use" on the y axis
         graph->SetPoint(i,graph_line.lines[0].at(i), graph_line.lines[use].at(i));
     }
     return graph;
@@ -81,6 +82,8 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     
     
     Color_t colors[] = {kRed-10, kRed-7, kRed, kRed+2, kRed+4};
+    
+    // If statements that create the title
     
     int use;
     if (source_or_no=="source"){
@@ -97,9 +100,6 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     else if (filename=="ref"){
         ref = ", reference layer";
     }
-    
-    
-
     title = "Gas gain"+source+ref;
     
     
@@ -118,7 +118,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
 	gStyle->SetOptStat(2210);
 	gStyle->SetTitleAlign(23);
 
-	//References for changing margins and the size of the canvas
+	//References for margin, canvas and legend
 	int H = 800;
 	int W = H;
 	float T = 0.08*H;
@@ -148,7 +148,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
 
-    // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
+    // This function takes the line (which has been correctly re-sized), and then loops through and returns graphs.
     TGraph* graph_0 = make_graph(line_0, use);
     TGraph* graph_1 = make_graph(line_1, use);
     TGraph* graph_2 = make_graph(line_2, use);
@@ -162,7 +162,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     graph_3->SetLineColor(colors[3]);
     graph_4->SetLineColor(colors[4]);
     
-    // Make the markers all round and pretty
+    // Make the markers
     graph_0->SetMarkerStyle(20);
     graph_0->SetMarkerSize(0.8);
     graph_0->SetMarkerColor(colors[0]);
@@ -186,12 +186,12 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     graph_3->SetLineWidth(2.0);
     graph_4->SetLineWidth(2.0);
     
-    // Still the legend, label by hand
-    legend->AddEntry(graph_0, "Run 0");
-    legend->AddEntry(graph_1, "Run 1");
-    legend->AddEntry(graph_2, "Run 2");
-    legend->AddEntry(graph_3, "Run 3");
-    legend->AddEntry(graph_4, "Run 4");
+    // Label the legend by hand
+    legend->AddEntry(graph_0, "Run 0, 0 mC/cm");
+    legend->AddEntry(graph_1, "Run 1, 18 mC/cm");
+    legend->AddEntry(graph_2, "Run 2, 26 mC/cm");
+    legend->AddEntry(graph_3, "Run 3, 65 mC/cm");
+    legend->AddEntry(graph_4, "Run 4, 125 mC/cm");
 
     // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();
@@ -202,7 +202,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     mg->Add(graph_3);
     mg->Add(graph_4);
     
-    // title!
+    // title
     mg->SetTitle(title);
     
     //Set the plot to log on the y-axis
@@ -210,7 +210,7 @@ int graph_section(string filename, string source_or_no, PlotterLines graphLines0
     mg->Draw("ALP");
     canvas->SetLogy();
     
-    //  label
+    //  label axis
     mg->GetXaxis()->SetTitle("Voltage (kV)");
     
     //mg->GetXaxis()->SetTitle("Voltage (kV)");

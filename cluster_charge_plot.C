@@ -1,8 +1,7 @@
 #include "snippet.C"
 
-int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4);
-TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4);
-float Get_average_val_irr(PlotterLines run);
+int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4);
+TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4);
 float Get_average_val_ref(PlotterLines run);
 TGraph* format_me(TGraph* graph, Color_t color);
 
@@ -15,33 +14,21 @@ void cluster_charge_plot(string which_plot, string norm_or_no) {
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
     
-    PlotterLines hole_num(test, 2, 13, 0, 1);
-    PlotterLines run_0(test, 2, 13, 1, 1);
-    //PlotterLines run_1(test, 2, 13, 3, 1);
-    PlotterLines run_2(test, 2, 13, 5, 1);
-    PlotterLines run_3(test, 2, 13, 7, 1);
-    PlotterLines run_4(test, 2, 13, 9, 1);
+    PlotterLines hole_num(test, 2, 14, 0, 1);
+    PlotterLines run_0(test, 2, 14, 1, 1);
+    PlotterLines run_1(test, 2, 14, 3, 1);
+    PlotterLines run_2(test, 2, 14, 5, 1);
+    PlotterLines run_3(test, 2, 14, 7, 1);
+    PlotterLines run_4(test, 2, 14, 9, 1);
 
-    graph_section(which_plot,norm_or_no, hole_num, run_0, run_2, run_3, run_4);
+    graph_section(which_plot,norm_or_no, hole_num, run_0, run_1, run_2, run_3, run_4);
 }
 
-float Get_average_val_irr(PlotterLines run){
-    float tot=0;
-    float divide=6;
-    for (int i=0;i<6;i++){
-        if (run.lines[0].at(i)==0){
-            divide=divide-1;
-            continue;
-        }
-        tot = tot+run.lines[0].at(i);
-    }
-    return tot/divide;
-}
 
 float Get_average_val_ref(PlotterLines run){
-    float divide=6;
+    float divide=2;
     float tot=0;
-    for (int i=0;i<6;i++){
+    for (int i=10;i<12;i++){
         if (run.lines[0].at(i)==0){
             divide=divide-1;
             continue;
@@ -52,30 +39,24 @@ float Get_average_val_ref(PlotterLines run){
 }
 
 // Makes the graphs
-TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
-    TGraph *graph = new TGraph(4);
+TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
+    TGraph *graph = new TGraph(5);
     
+    // Note the the first number is the "point number" and will always be 0-4, the second number the accumlated charge, and the last number is charge mean
 
-    
-    
-    // Note the the first number is the "point number" and will always be 0-4, the second number the the run number (will be accumulated charge at some point), and the last number is charge mean
-    if (norm_or_no=="irr"){
-        graph->SetPoint(0, 0, run_0.lines[0].at(i)/Get_average_val_irr(run_0));
-        graph->SetPoint(1, 26, run_2.lines[0].at(i)/Get_average_val_irr(run_2));
-        graph->SetPoint(2, 65, run_3.lines[0].at(i)/Get_average_val_irr(run_3));
-        graph->SetPoint(3, 125, run_4.lines[0].at(i)/Get_average_val_irr(run_4));
-    }
-    else if (norm_or_no=="ref"){
-        graph->SetPoint(0, 0, run_0.lines[0].at(i)/Get_average_val_ref(run_0));
-        graph->SetPoint(1, 26, run_2.lines[0].at(i)/Get_average_val_ref(run_2));
-        graph->SetPoint(2, 65, run_3.lines[0].at(i)/Get_average_val_ref(run_3));
-        graph->SetPoint(3, 125, run_4.lines[0].at(i)/Get_average_val_ref(run_4));
+    if (norm_or_no=="ref"){
+        graph->SetPoint(0, 0, run_0.lines[0].at(i)/run_0.lines[0].at(11));
+        graph->SetPoint(1, 53, run_1.lines[0].at(i)/run_1.lines[0].at(11));
+        graph->SetPoint(2, 95, run_2.lines[0].at(i)/run_2.lines[0].at(11));
+        graph->SetPoint(3, 121, run_3.lines[0].at(i)/run_3.lines[0].at(11));
+        graph->SetPoint(4, 180, run_4.lines[0].at(i)/run_4.lines[0].at(11));
     }
     else{
         graph->SetPoint(0, 0, run_0.lines[0].at(i));
-        graph->SetPoint(1, 26, run_2.lines[0].at(i));
-        graph->SetPoint(2, 65, run_3.lines[0].at(i));
-        graph->SetPoint(3, 125, run_4.lines[0].at(i));
+        graph->SetPoint(1, 53, run_1.lines[0].at(i));
+        graph->SetPoint(2, 95, run_2.lines[0].at(i));
+        graph->SetPoint(3, 121, run_3.lines[0].at(i));
+        graph->SetPoint(4, 180, run_4.lines[0].at(i));
     }
     return graph;
 }
@@ -92,34 +73,35 @@ TGraph* format_me(TGraph* graph, Color_t color){
 
 
 
-int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
+int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4){
 	
     TString title;
     TString label;
     label = " ";
     if (norm_or_no=="ref"){
-        label = ", normalized to reference layer";
+        label = ", normalized to reference (3,1)";
     }
-    title = "Cluster charge"+label;
+    title = "Cluster charge Landau MPV"+label;
     
     
     
     // For this plot, the "i" in graphLine.line[thing].at(i) refers to which hole is being sourced. Guidlines here:
-    // Top (1,1): i=0
-    // Top (1,2): i=1
-    // Top (2,1): i=2
-    // Top (2,2): i=3
-    // Top (3,1): i=4
-    // Top (3,2): i=5
-    // Bottom (1,1): i=6
-    // Bottom (1,2): i=7
-    // Bottom (2,1): i=8
-    // Bottom (2,2): i=9
-    // Bottom (3,1): i=10
-    // Bottom (3,2): i=11
+    // None: i=0
+    // Irr 1,1: i=1
+    // Irr 1,2: i=2
+    // Irr 2,1: i=3
+    // Irr 2,2: i=4
+    // Irr 3,1: i=5
+    // Irr 3,2: i=6
+    // Ref 1,1: i=7
+    // Ref 1,2: i=8
+    // Red 2,1: i=9
+    // Ref 2,2: i=10
+    // Ref 3,1: i=11
+    // Ref 3,2: i=12
     
     
-    Color_t colors[] = {kRed, kRed+3, kRed-6, kOrange-3, kRed-3, kOrange+4, kBlue-10, kBlue-7, kBlue, kBlue+2, kAzure+4, kAzure+1};
+    Color_t colors[] = {kBlue-10, kBlue-7, kBlue, kBlue+2, kAzure+4, kAzure+1, kRed, kRed+3, kRed-6, kOrange-3, kRed-3, kOrange+4};
     
 	//Just some styling stuff
 	gROOT->SetBatch(true);
@@ -157,54 +139,30 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
 	legend->SetBorderSize(1);
 
     // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
-    TGraph* graph_1_1 = make_graph(norm_or_no,0,run_0, run_2, run_3, run_4);
-    TGraph* graph_1_2 = make_graph(norm_or_no,1,run_0, run_2, run_3, run_4);
-    TGraph* graph_2_1 = make_graph(norm_or_no,2,run_0, run_2, run_3, run_4);
-    TGraph* graph_2_2 = make_graph(norm_or_no,3,run_0, run_2, run_3, run_4);
-    TGraph* graph_3_1 = make_graph(norm_or_no,4,run_0, run_2, run_3, run_4);
-    TGraph* graph_3_2 = make_graph(norm_or_no,5,run_0, run_2, run_3, run_4);
+    TGraph* graph_irr_2_1 = make_graph(norm_or_no,3,run_0, run_1, run_2, run_3, run_4);
+    TGraph* graph_irr_2_2 = make_graph(norm_or_no,4,run_0, run_1, run_2, run_3, run_4);
+    TGraph* graph_irr_3_1 = make_graph(norm_or_no,5,run_0, run_1, run_2, run_3, run_4);
+    TGraph* graph_irr_3_2 = make_graph(norm_or_no,6,run_0, run_1, run_2, run_3, run_4);
+    TGraph* graph_ref_2_2 = make_graph(norm_or_no,10,run_0, run_1, run_2, run_3, run_4);
+    TGraph* graph_ref_3_1 = make_graph(norm_or_no,11,run_0, run_1, run_2, run_3, run_4);
     
-    TGraph* graph_bot_1_1 = make_graph(norm_or_no,6,run_0, run_2, run_3, run_4);
-    TGraph* graph_bot_1_2 = make_graph(norm_or_no,7,run_0, run_2, run_3, run_4);
-    TGraph* graph_bot_2_1 = make_graph(norm_or_no,8,run_0, run_2, run_3, run_4);
-    TGraph* graph_bot_2_2 = make_graph(norm_or_no,9,run_0, run_2, run_3, run_4);
-    TGraph* graph_bot_3_1 = make_graph(norm_or_no,10,run_0, run_2, run_3, run_4);
-    TGraph* graph_bot_3_2 = make_graph(norm_or_no,11,run_0, run_2, run_3, run_4);
-    
-    
-    TGraph* fin_graph_1_1 = format_me(graph_1_1, colors[0]);
-    TGraph* fin_graph_1_2 = format_me(graph_1_2, colors[1]);
-    TGraph* fin_graph_2_1 = format_me(graph_2_1, colors[2]);
-    TGraph* fin_graph_2_2 = format_me(graph_2_2, colors[3]);
-    TGraph* fin_graph_3_1 = format_me(graph_3_1, colors[4]);
-    TGraph* fin_graph_3_2 = format_me(graph_3_2, colors[5]);
-    
-    
-    // Format everything
-    TGraph* fin_graph_bot_1_1 = format_me(graph_bot_1_1, colors[6]);
-    TGraph* fin_graph_bot_1_2 = format_me(graph_bot_1_2, colors[7]);
-    TGraph* fin_graph_bot_2_1 = format_me(graph_bot_2_1, colors[8]);
-    TGraph* fin_graph_bot_2_2 = format_me(graph_bot_2_2, colors[9]);
-    TGraph* fin_graph_bot_3_1 = format_me(graph_bot_3_1, colors[10]);
-    TGraph* fin_graph_bot_3_2 = format_me(graph_bot_3_2, colors[11]);
-    
+    TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6]);
+    TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7]);
+    TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8]);
+    TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9]);
+    TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0]);
+    TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1]);
     
     
     // Still the legend, label by hand
-    legend->AddEntry(fin_graph_bot_1_1, "Irr (1,1)");
-    legend->AddEntry(fin_graph_bot_1_2, "Irr (1,2)");
-    legend->AddEntry(fin_graph_bot_2_1, "Irr (2,1)");
-    legend->AddEntry(fin_graph_bot_2_2, "Irr (2,2)");
-    legend->AddEntry(fin_graph_bot_3_1, "Irr (3,1)");
-    legend->AddEntry(fin_graph_bot_3_2, "Irr (3,2)");
+    legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
+    legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+    legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
+    legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
+    legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
     
     if (norm_or_no!="ref"){
-        legend->AddEntry(fin_graph_1_1, "Ref (1,1)");
-        legend->AddEntry(fin_graph_1_2, "Ref (1,2)");
-        legend->AddEntry(fin_graph_2_1, "Ref (2,1)");
-        legend->AddEntry(fin_graph_2_2, "Ref (2,2)");
-        legend->AddEntry(fin_graph_3_1, "Ref (3,1)");
-        legend->AddEntry(fin_graph_3_2, "Ref (3,2)");
+        legend->AddEntry(fin_graph_ref_3_1, "Ref (3,1)");
     }
         
         
@@ -212,21 +170,13 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
     TMultiGraph *mg = new TMultiGraph();
     
     if (norm_or_no!="ref"){
-        mg->Add(fin_graph_1_1);
-        mg->Add(fin_graph_1_2);
-        mg->Add(fin_graph_2_1);
-        mg->Add(fin_graph_2_2);
-        mg->Add(fin_graph_3_1);
-        mg->Add(fin_graph_3_2);
+        mg->Add(fin_graph_ref_3_1);
     }
-    
-    
-    mg->Add(fin_graph_bot_1_1);
-    mg->Add(fin_graph_bot_1_2);
-    mg->Add(fin_graph_bot_2_1);
-    mg->Add(fin_graph_bot_2_2);
-    mg->Add(fin_graph_bot_3_1);
-    mg->Add(fin_graph_bot_3_2);
+    mg->Add(fin_graph_ref_2_2);
+    mg->Add(fin_graph_irr_2_1);
+    mg->Add(fin_graph_irr_2_2);
+    mg->Add(fin_graph_irr_3_1);
+    mg->Add(fin_graph_irr_3_2);
     
     // title!
     mg->SetTitle(title);
@@ -238,7 +188,7 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
     mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
     mg->GetYaxis()->SetTitle("ADC counts");
     if (norm_or_no=="ref" or norm_or_no=="irr"){
-        mg->GetYaxis()->SetRangeUser(0.9, 1.3);
+        mg->GetYaxis()->SetRangeUser(0.86, 1.2);
     }
 
 	legend->Draw("SAME");
