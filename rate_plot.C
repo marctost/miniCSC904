@@ -298,8 +298,9 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
     line->Draw();
 
 
-    // Save the plot to the desktop.
-	string saveWhere = "/Users/marctost/Desktop/"+filename+"_"+subtract_or_no+".pdf";
+    // Save the plot.
+    system("mkdir -p Plots");
+	string saveWhere = "Plots/"+filename+"_"+subtract_or_no+".pdf";
 	canvas->Update();
     canvas->SaveAs(saveWhere.c_str());
     canvas;

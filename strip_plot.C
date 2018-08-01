@@ -157,7 +157,8 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
     
     
     // Locate where it goes and gets saved
-	string saveWhere = "/Users/marctost/Desktop/strip_to_strip.png";
+    system("mkdir -p Plots");
+	string saveWhere = "Plots/strip_to_strip.png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
 	canvas;

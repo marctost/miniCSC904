@@ -233,12 +233,12 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
 	mg->GetYaxis()->SetTitle("Current (pA)");
     mg->GetXaxis()->SetRangeUser(2,4);
     
-    
-
 	legend->Draw("SAME");
 
-    // Locate where it goes and gets saved, may have to be changed.
-	string saveWhere = "/Users/marctost/Desktop/darkcurrent_"+filename+".pdf";
+
+    //Save the plots
+    system("mkdir -p Plots");
+	string saveWhere = "Plots/darkcurrent_"+filename+".pdf";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
 	canvas;

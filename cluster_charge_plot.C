@@ -230,8 +230,9 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
 
 	legend->Draw("SAME");
 
-    // Locate where it goes and gets saved, may have to be changed.
-	string saveWhere = "/Users/marctost/Desktop/cluster_"+filename+norm_or_no+".png";
+    // Save plots
+    system("mkdir -p Plots");
+	string saveWhere = "Plots/cluster_"+filename+norm_or_no+".png";
 	canvas->Update();
 	canvas->SaveAs(saveWhere.c_str());
 	canvas;
