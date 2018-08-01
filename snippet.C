@@ -72,7 +72,7 @@ public:
   }
 
   int size;
-  vector<double> lines[6];
+  vector<double> lines[10];
   vector<double> voltages;
 };
 

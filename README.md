@@ -47,11 +47,15 @@ To create the excel spreadsheets:
 * Copy and paste the appropriate values underneath row 3.
 * Excel will automatically generate everything below row 30.
 * Copy 33-122, A-P, and paste it into 1A of the spreadsheet called 'final_numbers_rate'. (Note that you have to use 'paste special' and paste the values, otherwise it will throw up weird errors.)
-* Convert the final_numbers spreadsheet into a .csv file.
+* Convert the final_numbers spreadsheet into a .csv file, if it is not already in that format.
 
 To make the rate plots:
 * Change the location of where you want the plots to go (line 132).
 * Run the command: bash make_rate_plots.sh
+
+To add another run:
+* The spreadsheet has room for up to 10 runs. When calling the function, the final value is the number of lines on the plot. (run 5 = 6). Increasing this will add the right number of runs. Will add a line at 0 if not filled.
+* The accumuluated charges are hardcoded into a big array. Update it to make the legend correct.
 
 -------------------------
 
