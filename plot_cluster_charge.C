@@ -1,12 +1,12 @@
 #include "snippet.C"
 
-int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 float Get_average_val_ref(PlotterLines run);
 TGraph* format_me(TGraph* graph, Color_t color);
 
-void cluster_charge_plot(string which_plot, string norm_or_no) {
-    ExcelSheet test("analysis_page_cluster.csv");
+void plot_cluster_charge(TString which_chamber, string which_plot, string norm_or_no) {
+    ExcelSheet test(which_chamber+"/"+"analysis_page_cluster.csv");
 
     // This is the important bit! The first value refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
@@ -27,7 +27,7 @@ void cluster_charge_plot(string which_plot, string norm_or_no) {
     PlotterLines run_9(test, 2, 14, 10, 1);
     PlotterLines run_10(test, 2, 14, 11, 1);
     
-    graph_section(which_plot,norm_or_no, hole_num, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    graph_section(which_chamber, which_plot,norm_or_no, hole_num, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
 }
 
 
@@ -104,18 +104,18 @@ TGraph* format_me(TGraph* graph, Color_t color){
 
 
 
-int graph_section(string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
+int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
 	
     TString title;
     TString label;
     label = " ";
     if (norm_or_no=="ref"){
-        label = ", normalized to reference (3,1)";
+        label = ", Normalized to Ref. Layer (3,1)";
     }
     else if (norm_or_no=="irr"){
-        label = ", normalized to irradiated (3,1)";
+        label = ", Normalized to Irr. Layer (3,1)";
     }
-    title = "Cluster charge MPV"+label;
+    title = "Cluster Charge: Landau MPV"+label;
     
     
     
@@ -189,28 +189,54 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
     
     
     // Still the legend, label by hand
-    legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
-    legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
-    legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
-    legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
-    
-    if (norm_or_no!="irr"){
-        legend->AddEntry(fin_graph_ref_3_1, "Ref (3,1)");
-        legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
+    if (norm_or_no=="irr") {
+        legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
+        legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+//        legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
+        legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
     }
-        
-        
+    else if (norm_or_no=="ref") {
+        legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
+        legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+        legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
+        legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
+        legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
+//        legend->AddEntry(fin_graph_ref_3_1, "Ref (3,1)");
+    }
+    else {
+        legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
+        legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+        legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
+        legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
+        legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
+        legend->AddEntry(fin_graph_ref_3_1, "Ref (3,1)");
+    }
+    
     // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();
     
-    if (norm_or_no!="irr"){
-        mg->Add(fin_graph_ref_3_1);
-        mg->Add(fin_graph_ref_2_2);
+    if (norm_or_no=="irr") {
+        mg->Add(fin_graph_irr_2_1);
+        mg->Add(fin_graph_irr_2_2);
+//        mg->Add(fin_graph_irr_3_1);
+        mg->Add(fin_graph_irr_3_2);
     }
-    mg->Add(fin_graph_irr_2_1);
-    mg->Add(fin_graph_irr_2_2);
-    mg->Add(fin_graph_irr_3_1);
-    mg->Add(fin_graph_irr_3_2);
+    else if (norm_or_no=="ref") {
+        mg->Add(fin_graph_irr_2_1);
+        mg->Add(fin_graph_irr_2_2);
+        mg->Add(fin_graph_irr_3_1);
+        mg->Add(fin_graph_irr_3_2);
+        mg->Add(fin_graph_ref_2_2);
+//        mg->Add(fin_graph_ref_3_1);
+    }
+    else {
+        mg->Add(fin_graph_irr_2_1);
+        mg->Add(fin_graph_irr_2_2);
+        mg->Add(fin_graph_irr_3_1);
+        mg->Add(fin_graph_irr_3_2);
+        mg->Add(fin_graph_ref_2_2);
+        mg->Add(fin_graph_ref_3_1);
+    }
     
     // title!
     mg->SetTitle(title);
@@ -220,7 +246,12 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
     
     //  label
     mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
-    mg->GetYaxis()->SetTitle("ADC counts");
+    if ( (norm_or_no=="ref") || (norm_or_no=="irr") ) {
+        mg->GetYaxis()->SetTitle("Ratio");
+    }
+    else{
+        mg->GetYaxis()->SetTitle("ADC Counts");
+    }
     if (norm_or_no=="ref" or norm_or_no=="irr"){
         mg->GetYaxis()->SetRangeUser(0.86, 1.3);
     }
@@ -231,10 +262,11 @@ int graph_section(string filename, string norm_or_no, PlotterLines hole_num, Plo
 	legend->Draw("SAME");
 
     // Save plots
-    system("mkdir -p Plots");
-	string saveWhere = "Plots/cluster_"+filename+norm_or_no+".png";
+    system("mkdir -p "+which_chamber+"/"+"Plots/");
+	TString saveWhere = which_chamber+"/"+"Plots/cluster_"+filename+norm_or_no+".png";
 	canvas->Update();
-	canvas->SaveAs(saveWhere.c_str());
+//    canvas->SaveAs(saveWhere.c_str());
+    canvas->SaveAs(saveWhere);
 	canvas;
 
 	return 0;

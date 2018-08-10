@@ -1,13 +1,15 @@
 #include "snippet.C"
 
-int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+
 TGraph* make_graph(int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+
 float Get_average_val_irr(PlotterLines run);
 float Get_average_val_ref(PlotterLines run);
 TGraph* format_me(TGraph* graph, Color_t color);
 
-void strip_plot() {
-    ExcelSheet test("analysis_page_strip.csv");
+void plot_strip(TString which_chamber) {
+    ExcelSheet test(which_chamber+"/"+"analysis_page_strip.csv");
 
     // This is the important bit! The first value refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
@@ -27,7 +29,7 @@ void strip_plot() {
     PlotterLines run_9(test, 2, 5, 27, 2);
     PlotterLines run_10(test, 2, 5, 30, 2);
     
-    graph_section(run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    graph_section(which_chamber, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
 }
 
 
@@ -51,7 +53,6 @@ TGraph* make_graph(int i, PlotterLines run_0, PlotterLines run_1, PlotterLines r
     //graph->SetPoint(5, 220, run_9.lines[1].at(i));
     //graph->SetPoint(5, 230, run_10.lines[1].at(i));
     
-    
     return graph;
 }
 
@@ -66,9 +67,7 @@ TGraph* format_me(TGraph* graph, Color_t color){
     return graph;
 }
 
-
-
-int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
+int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
 	
     // For this plot, the "i" in graphLine.line[thing].at(i) refers to the wire pair being used,
     // following the formula i+1 i.e. at(0) is pair 1, etc
@@ -79,7 +78,7 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
-	gStyle->SetTitleAlign(13);
+//    gStyle->SetTitleAlign(13);
 
 	//References for margin, canvas and legend
 	int H = 800;
@@ -119,8 +118,8 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
     
     
     //Run the plots through the formater, select the desired colors from the list at beginning of function
-    TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[6]);
-    TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[7]);
+    TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[7]);
+    TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[6]);
     TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[1]);
     TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
     
@@ -142,7 +141,7 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
     canvas->SetLogy();
     
     // title
-    mg->SetTitle("Strip to strip");
+    mg->SetTitle("Strip-to-Strip Resistance");
     
     mg->Draw("ALP");
 
@@ -157,11 +156,12 @@ int graph_section(PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, Pl
     
     
     // Locate where it goes and gets saved
-    system("mkdir -p Plots");
-	string saveWhere = "Plots/strip_to_strip.png";
-	canvas->Update();
-	canvas->SaveAs(saveWhere.c_str());
-	canvas;
+    system("mkdir -p "+which_chamber+"/"+"Plots/");
+    TString saveWhere = which_chamber+"/"+"Plots/strip_to_strip.png";
+    canvas->Update();
+//    canvas->SaveAs(saveWhere.c_str());
+    canvas->SaveAs(saveWhere);
+    canvas;
 
 	return 0;
 }

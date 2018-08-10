@@ -1,12 +1,11 @@
 #include "snippet.C"
 
-int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+int graph_section(TString which_chamber, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 TGraph* make_graph(PlotterLines voltage, PlotterLines graph_line);
 
-void gas_gain_plot() {
-    ExcelSheet test("analysis_page_gasGain.csv");
+void plot_gas_gain(TString which_chamber) {
+    ExcelSheet test(which_chamber+"/"+"analysis_page_gasGain.csv");
 
-    
     // This is the important bit! The first value (test) refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
     // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
@@ -26,7 +25,7 @@ void gas_gain_plot() {
     PlotterLines run_9(test, 1, 12, 10, 1);
     PlotterLines run_10(test, 1, 12, 11, 1);
 
-    graph_section(voltage,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    graph_section(which_chamber, voltage,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
 }
 
 
@@ -52,9 +51,9 @@ TGraph* make_graph(PlotterLines voltage, PlotterLines graph_line, Color_t color,
 }
 
 
-int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
+int graph_section(TString which_chamber, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
     
-    TString title = "Absolute gas gain";
+    TString title = "Absolute Gas Gain: Irr. Layer";
     
 	//Just some styling stuff
 	gROOT->SetBatch(true);
@@ -96,8 +95,8 @@ int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, 
     TGraph* graph_1 = make_graph(voltage, run_1, kRed, 0.2);
     TGraph* graph_2 = make_graph(voltage, run_2, kRed, 0.3);
     TGraph* graph_3 = make_graph(voltage, run_3, kRed, 0.4);
-    TGraph* graph_4 = make_graph(voltage, run_4, kRed+2, 1);
-    // TGraph* graph_5 = make_graph(voltage, run_5, kRed+2, 1);
+    TGraph* graph_4 = make_graph(voltage, run_4, kRed, 0.5);
+     TGraph* graph_5 = make_graph(voltage, run_5, kRed+2, 1);
     // TGraph* graph_6 = make_graph(voltage, run_6, kRed, 0.7);
     // TGraph* graph_7 = make_graph(voltage, run_7, kRed, 0.1);
     // TGraph* graph_8 = make_graph(voltage, run_8, kRed, 0.1);
@@ -113,7 +112,7 @@ int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, 
     legend->AddEntry(graph_2, "Run 2, 26 mC/cm");
     legend->AddEntry(graph_3, "Run 3, 65 mC/cm");
     legend->AddEntry(graph_4, "Run 4, 125 mC/cm");
-    //legend->AddEntry(graph_5, "Run 5, 180 mC/cm");
+    legend->AddEntry(graph_5, "Run 5, 180 mC/cm");
     //legend->AddEntry(graph_6, "Run 6, ? mC/cm");
     //legend->AddEntry(graph_7, "Run 7, ? mC/cm");
     //legend->AddEntry(graph_8, "Run 8, ? mC/cm");
@@ -129,7 +128,7 @@ int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, 
     mg->Add(graph_2);
     mg->Add(graph_3);
     mg->Add(graph_4);
-    //mg->Add(graph_5);
+    mg->Add(graph_5);
     //mg->Add(graph_6);
     //mg->Add(graph_7);
     //mg->Add(graph_8);
@@ -147,16 +146,23 @@ int graph_section(PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, 
     
     //  label axis
     mg->GetXaxis()->SetTitle("Voltage (kV)");
+    mg->GetYaxis()->SetTitle("Gas Gain");
     mg->GetXaxis()->SetRangeUser(0.2,3.8);
+    mg->GetYaxis()->SetRangeUser(0.5, 500000);
     
-
 	legend->Draw("SAME");
+    
+    TLine *line = new TLine(3.6, 0, 3.6, 500000);
+    line->SetLineColor(kPink-9);
+    line->SetLineWidth(2.0);
+    line->Draw();
 
     // Save plot
-    system("mkdir -p Plots");
-	string saveWhere = "Plots/gas_gain.pdf";
+    system("mkdir -p "+which_chamber+"/"+"Plots/");
+	TString saveWhere = which_chamber+"/"+"Plots/gas_gain.pdf";
 	canvas->Update();
-	canvas->SaveAs(saveWhere.c_str());
+//    canvas->SaveAs(saveWhere.c_str());
+    canvas->SaveAs(saveWhere);
 	canvas;
 
 	return 0;

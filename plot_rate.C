@@ -1,15 +1,13 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type, int line_num);
+int graph_section(TString which_chamber, string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type, int line_num);
 
-void rate_plot(string which_plot, string subtract_or_no, string irr_or_ref, string type, int line_num) {
-    ExcelSheet test("final_numbers_rate.csv");
+void plot_rate(TString which_chamber, string which_plot, string subtract_or_no, string irr_or_ref, string type, int line_num) {
+    ExcelSheet test(which_chamber+"/"+"final_numbers_rate.csv");
     
 TString get_leg(int j, TString charge);
-
     
-    
-    // This is the inportant bit! The first value (test) refers to the excel sheet above. The second number is
+    // This is the important bit! The first value (test) refers to the excel sheet above. The second number is
     // the row your numbers start on. The second number is the lowest row you go to. The 3rd number is the first column that you're pulling data from. The
     // last number is the number of adjacent columns you're using. Make sure to remember that things start
     // at zero!! So be careful.
@@ -34,40 +32,40 @@ TString get_leg(int j, TString charge);
     // Choose which plot you do. All the different options have their own call in the bash script.
     
     if (which_plot=="ALCT_dark"){
-        graph_section(which_plot,ALCT_dark, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,ALCT_dark, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="ALCT_top"){
-        graph_section(which_plot,ALCT_top, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,ALCT_top, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="ALCT_bottom"){
-        graph_section(which_plot,ALCT_bottom, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,ALCT_bottom, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="ALCT_top_irr"){
-        graph_section(which_plot,ALCT_top_irr, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,ALCT_top_irr, ALCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="CLCT_dark"){
-        graph_section(which_plot,CLCT_dark, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,CLCT_dark, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="CLCT_top"){
-        graph_section(which_plot,CLCT_top, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,CLCT_top, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="CLCT_bottom"){
-        graph_section(which_plot,CLCT_bottom, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,CLCT_bottom, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="CLCT_top_irr"){
-        graph_section(which_plot,CLCT_top_irr, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,CLCT_top_irr, CLCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="LCT_dark"){
-        graph_section(which_plot,LCT_dark, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,LCT_dark, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="LCT_top"){
-        graph_section(which_plot,LCT_top, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,LCT_top, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="LCT_bottom"){
-        graph_section(which_plot,LCT_bottom, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,LCT_bottom, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     else if (which_plot=="LCT_top_irr"){
-        graph_section(which_plot,LCT_top_irr, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
+        graph_section(which_chamber, which_plot,LCT_top_irr, LCT_dark, subtract_or_no, irr_or_ref, type, line_num);
     }
     
 }
@@ -116,7 +114,7 @@ TString get_leg(int j, TString charge){
 
 
 
-int graph_section(string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type, int line_num){
+int graph_section(TString which_chamber, string filename, PlotterLines graphLines, PlotterLines subtraction, string subtract_or_no, string irr_or_ref, string type, int line_num){
 	
     int move_color=0;
     TString title;
@@ -124,8 +122,6 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
     TString type_name;
     TString layer;
 
-    
-    
     // All these if functions take the argument provided when calling the program initially and create a nice title for the plot.
     if (subtract_or_no=="subtract"){
         sub = ", Background subtracted";
@@ -134,30 +130,31 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
         sub = " ";
     }
     if (irr_or_ref=="irr"){
-        layer = " Irradiated layer (3,1),";
+        layer = " Irradiated Layer (3,1)";
     }
     if (irr_or_ref=="irr_irr"){
-        layer = " Irradiated layer (2,2) (irr),";
+        layer = " Irradiated Layer (2,2) (Irr)";
         move_color=8;
     }
     else if (irr_or_ref=="ref"){
-        layer = " Reference layer (2,2),";
+        layer = " Reference Layer (2,2)";
     }
     else if (irr_or_ref=="dark"){
-        layer = " Dark,";
+        layer = " Dark Rate";
         sub = " ";
     }
     if (type=="LCT"){
-        type_name=" LCT rate";
+        type_name="LCT Rate:";
     }
     else if (type=="CLCT"){
-        type_name=" CLCT rate";
+        type_name="CLCT Rate:";
     }
     else if (type=="ALCT"){
-        type_name=" ALCT rate";
+        type_name="ALCT Rate:";
     }
     
-    title =layer+type_name+sub;
+//    title =layer+type_name+sub;
+    title =type_name+layer+sub;
 
     // These are the colors that will go into the plot. When the irradiated hole gets called, it is bumped +6.
     Color_t irr_use_col_prev = kRed;
@@ -267,7 +264,7 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
 
         
         //Manually set the dimensions of the plot to keep it consistent for all rate plots
-        graph->SetMaximum(600);
+        graph->SetMaximum(500);
         graph->GetXaxis()->SetRangeUser(2,4);
         
         //Some line styling.
@@ -292,17 +289,24 @@ int graph_section(string filename, PlotterLines graphLines, PlotterLines subtrac
     
     // Add a line at 3.6 kV
     canvas->Update();
-    TLine *line = new TLine(3.6, 0, 3.6, 600);
+    TLine *line = new TLine(3.6, 0, 3.6, 500);
     line->SetLineColor(kPink-9);
     line->SetLineWidth(2.0);
     line->Draw();
 
 
     // Save the plot.
-    system("mkdir -p Plots");
-	string saveWhere = "Plots/"+filename+"_"+subtract_or_no+".pdf";
+    system("mkdir -p "+which_chamber+"/"+"Plots/");
+    TString saveWhere;
+    if (irr_or_ref=="dark"){
+        saveWhere = which_chamber+"/"+"Plots/"+filename+".pdf";
+    }
+    else{
+        saveWhere = which_chamber+"/"+"Plots/"+filename+"_"+subtract_or_no+".pdf";
+    }
 	canvas->Update();
-    canvas->SaveAs(saveWhere.c_str());
+//    canvas->SaveAs(saveWhere.c_str());
+    canvas->SaveAs(saveWhere);
     canvas;
 
 

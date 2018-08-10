@@ -1,8 +1,13 @@
+#include <stdio.h>
+#include <stdlib.h>
+#include <iostream>
+#include <vector>
 #include <boost/algorithm/string.hpp>
+#include <TString.h>
 
 class ExcelSheet {
 public:
-  ExcelSheet(string filename) {
+  ExcelSheet(TString filename) {
     ifstream f(filename);
 
   

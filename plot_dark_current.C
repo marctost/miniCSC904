@@ -1,13 +1,12 @@
 #include "snippet.C"
 
-int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4, PlotterLines graphLines5, PlotterLines graphLines6); // , PlotterLines graphLines5, PlotterLines graphLines6, PlotterLines graphLines7, PlotterLines graphLines8, PlotterLines graphLines9, PlotterLines graphLines10
+int graph_section(TString which_chamber, string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4, PlotterLines graphLines5); // , PlotterLines graphLines5, PlotterLines graphLines6, PlotterLines graphLines7, PlotterLines graphLines8, PlotterLines graphLines9, PlotterLines graphLines10
 PlotterLines resize(PlotterLines graph_line);
 TGraph* make_graph(PlotterLines graph_line);
 TGraph* formatting(TGraph* graph, Color_t color, float alpha);
 
-void dark_current_plot(string which_plot) {
-    ExcelSheet test("analysis_page_darkCurrent.csv");
-
+void plot_dark_current(TString which_chamber, string which_plot) {
+    ExcelSheet test(which_chamber+"/"+"analysis_page_darkCurrent.csv");
     
     // This is the inportant bit! The first value refers to the excel sheet above. The second number is
     // the row you start on. The second number is the lowest row you go to. The 3rd number is the first column that you're pulling. The
@@ -32,8 +31,8 @@ void dark_current_plot(string which_plot) {
     PlotterLines irr_5(test, 3, 10, 25, 2);
     PlotterLines ref_5(test, 3, 6, 27, 2);
     
-    PlotterLines irr_6(test, 3, 10, 30, 2);
-    PlotterLines ref_6(test, 3, 6, 32, 2);
+//    PlotterLines irr_6(test, 3, 10, 30, 2);
+//    PlotterLines ref_6(test, 3, 6, 32, 2);
     
     //PlotterLines irr_7(test, 3, 10, 35, 2);
     //PlotterLines ref_7(test, 3, 6, 37, 2);
@@ -52,10 +51,10 @@ void dark_current_plot(string which_plot) {
     
     // Choose which plot you want to make, bash script contains corresponding calls for each.
     if (which_plot=="irr"){
-        graph_section(which_plot,irr_0, irr_1, irr_2, irr_3, irr_4, irr_5, irr_6); // , irr_5, irr_6, irr_7, irr_8, irr_9, irr_10
+        graph_section(which_chamber, which_plot,irr_0, irr_1, irr_2, irr_3, irr_4, irr_5); // , irr_5, irr_6, irr_7, irr_8, irr_9, irr_10
     }
     else if (which_plot=="ref"){
-        graph_section(which_plot,ref_0, ref_1, ref_2, ref_3, ref_4, ref_5, ref_6);// , ref_5, ref_6, ref_7, ref_8, ref_9, ref_10
+        graph_section(which_chamber, which_plot,ref_0, ref_1, ref_2, ref_3, ref_4, ref_5);// , ref_5, ref_6, ref_7, ref_8, ref_9, ref_10
     }
 
 }
@@ -96,7 +95,7 @@ TGraph* make_graph(PlotterLines graph_line){
 }
 
 
-int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4, PlotterLines graphLines5, PlotterLines graphLines6){ // , PlotterLines graphLines5, PlotterLines graphLines6, PlotterLines graphLines7, PlotterLines graphLines8, PlotterLines graphLines9, PlotterLines graphLines10
+int graph_section(TString which_chamber, string filename, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4, PlotterLines graphLines5){ // , PlotterLines graphLines5, PlotterLines graphLines6, PlotterLines graphLines7, PlotterLines graphLines8, PlotterLines graphLines9, PlotterLines graphLines10
 
     Color_t color_irr[] = {kRed, kRed+2};
     Color_t color_ref[] = {kBlue, kBlue+3};
@@ -118,7 +117,7 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
         new_color=color_ref[1];
     }
     
-    title = "Dark Current, "+label;
+    title = "Dark Current: "+label;
 
     
     //Make sure that the vectors have the right length using the above function
@@ -128,7 +127,7 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     PlotterLines line_3 = resize(graphLines3);
     PlotterLines line_4 = resize(graphLines4);
     PlotterLines line_5 = resize(graphLines5);
-    PlotterLines line_6 = resize(graphLines6);
+//    PlotterLines line_6 = resize(graphLines6);
     //PlotterLines line_7 = resize(graphLines7);
     //PlotterLines line_8 = resize(graphLines8);
     //PlotterLines line_9 = resize(graphLines9);
@@ -177,7 +176,7 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     TGraph* graph_3_ = make_graph(line_3);
     TGraph* graph_4_ = make_graph(line_4);
     TGraph* graph_5_ = make_graph(line_5);
-    TGraph* graph_6_ = make_graph(line_6);
+//    TGraph* graph_6_ = make_graph(line_6);
     //TGraph* graph_7_ = make_graph(line_7);
     //TGraph* graph_8_ = make_graph(line_8);
     //TGraph* graph_9_ = make_graph(line_9);
@@ -189,8 +188,8 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     TGraph* graph_2 = formatting(graph_2_, old_color,0.3);
     TGraph* graph_3 = formatting(graph_3_, old_color,0.4);
     TGraph* graph_4 = formatting(graph_4_, old_color,0.5);
-    TGraph* graph_5 = formatting(graph_5_, old_color,0.6);
-    TGraph* graph_6 = formatting(graph_6_, new_color, 1);
+    TGraph* graph_5 = formatting(graph_5_, new_color,1);
+//    TGraph* graph_6 = formatting(graph_6_, new_color, 1);
     //TGraph* graph_7 = formatting(graph_7_, old_color,0.8);
     //TGraph* graph_8 = formatting(graph_8_, old_color,0.9);
     //TGraph* graph_9 = formatting(graph_9_, old_color,1);
@@ -203,7 +202,7 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
     legend->AddEntry(graph_3, "Run 3, 121 mC/cm");
     legend->AddEntry(graph_4, "Run 4, 149 mC/cm");
     legend->AddEntry(graph_5, "Run 5, 180 mC/cm");
-    legend->AddEntry(graph_6, "Run 6, ? mC/cm");
+//    legend->AddEntry(graph_6, "Run 6, ? mC/cm");
     //legend->AddEntry(graph_7, "Run 7, ? mC/cm");
     //legend->AddEntry(graph_8, "Run 8, ? mC/cm");
     //legend->AddEntry(graph_9, "Run 9, ? mC/cm");
@@ -237,10 +236,11 @@ int graph_section(string filename, PlotterLines graphLines0, PlotterLines graphL
 
 
     //Save the plots
-    system("mkdir -p Plots");
-	string saveWhere = "Plots/darkcurrent_"+filename+".pdf";
+    system("mkdir -p "+which_chamber+"/"+"Plots/");
+	TString saveWhere = which_chamber+"/"+"Plots/darkcurrent_"+filename+".pdf";
 	canvas->Update();
-	canvas->SaveAs(saveWhere.c_str());
+//    canvas->SaveAs(saveWhere.c_str());
+    canvas->SaveAs(saveWhere);
 	canvas;
 
 	return 0;
