@@ -1,6 +1,6 @@
 #include "snippet.C"
 
-int graph_section(TString which_chamber, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+int graph_section(TString which_chamber, int zoom, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 TGraph* make_graph(PlotterLines voltage, PlotterLines graph_line);
 
 void plot_gas_gain(TString which_chamber) {
@@ -25,7 +25,9 @@ void plot_gas_gain(TString which_chamber) {
     PlotterLines run_9(test, 1, 12, 10, 1);
     PlotterLines run_10(test, 1, 12, 11, 1);
 
-    graph_section(which_chamber, voltage,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    //Make plots
+    graph_section(which_chamber, 0, voltage,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10); //no zoom
+    graph_section(which_chamber, 1, voltage,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10); //zoom around 3.6 kV
 }
 
 
@@ -51,7 +53,7 @@ TGraph* make_graph(PlotterLines voltage, PlotterLines graph_line, Color_t color,
 }
 
 
-int graph_section(TString which_chamber, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
+int graph_section(TString which_chamber, int zoom, PlotterLines voltage, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
     
     TString title = "Absolute Gas Gain: Irr. Layer";
     
@@ -147,23 +149,35 @@ int graph_section(TString which_chamber, PlotterLines voltage, PlotterLines run_
     //  label axis
     mg->GetXaxis()->SetTitle("Voltage (kV)");
     mg->GetYaxis()->SetTitle("Gas Gain");
-    mg->GetXaxis()->SetRangeUser(0.2,3.8);
-    mg->GetYaxis()->SetRangeUser(0.5, 500000);
+    
+    if (zoom==0){
+        mg->GetXaxis()->SetRangeUser(0.2,3.8);
+        mg->GetYaxis()->SetRangeUser(0.5, 500000);
+        TLine *line = new TLine(3.6, 0, 3.6, 500000);
+        line->SetLineColor(kPink-9);
+        line->SetLineWidth(2.0);
+        line->Draw();
+    }
+    else{
+        mg->GetXaxis()->SetRangeUser(3.25,3.70);
+        mg->GetYaxis()->SetRangeUser(10000, 200000);
+        TLine *line = new TLine(3.6, 0, 3.6, 200000);
+        line->SetLineColor(kPink-9);
+        line->SetLineWidth(2.0);
+        line->Draw();
+    }
     
 	legend->Draw("SAME");
     
-    TLine *line = new TLine(3.6, 0, 3.6, 500000);
-    line->SetLineColor(kPink-9);
-    line->SetLineWidth(2.0);
-    line->Draw();
+    
 
     // Save plot
     system("mkdir -p "+which_chamber+"/"+"Plots/");
-	TString saveWhere = which_chamber+"/"+"Plots/gas_gain.pdf";
+	TString saveWhere = which_chamber+"/"+"Plots/gas_gain"+to_string(zoom)+".pdf";
 	canvas->Update();
 //    canvas->SaveAs(saveWhere.c_str());
     canvas->SaveAs(saveWhere);
-	canvas;
+	delete canvas;
 
 	return 0;
 }

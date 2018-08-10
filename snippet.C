@@ -2,8 +2,17 @@
 #include <stdlib.h>
 #include <iostream>
 #include <vector>
-#include <boost/algorithm/string.hpp>
 #include <TString.h>
+#include <TH1D.h>
+#include <TCanvas.h>
+#include <TPad.h>
+#include <TPaveStats.h>
+#include <TColor.h>
+#include <TLatex.h>
+#include <TLegend.h>
+#include <TMath.h>
+
+#include <boost/algorithm/string.hpp>
 
 class ExcelSheet {
 public:
