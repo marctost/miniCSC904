@@ -157,7 +157,7 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     
     // Locate where it goes and gets saved
     system("mkdir -p "+which_chamber+"/"+"Plots/");
-    TString saveWhere = which_chamber+"/"+"Plots/strip_to_strip.png";
+    TString saveWhere = which_chamber+"/"+"Plots/strip_to_strip.pdf";
     canvas->Update();
 //    canvas->SaveAs(saveWhere.c_str());
     canvas->SaveAs(saveWhere);

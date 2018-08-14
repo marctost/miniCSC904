@@ -263,7 +263,7 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
 
     // Save plots
     system("mkdir -p "+which_chamber+"/"+"Plots/");
-	TString saveWhere = which_chamber+"/"+"Plots/cluster_"+filename+norm_or_no+".png";
+	TString saveWhere = which_chamber+"/"+"Plots/cluster_"+filename+norm_or_no+".pdf";
 	canvas->Update();
 //    canvas->SaveAs(saveWhere.c_str());
     canvas->SaveAs(saveWhere);

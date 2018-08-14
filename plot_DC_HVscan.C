@@ -5,7 +5,7 @@ PlotterLines resize(PlotterLines graph_line);
 TGraph* make_graph(PlotterLines graph_line);
 TGraph* formatting(TGraph* graph, Color_t color, float alpha);
 
-void plot_dark_current(TString which_chamber, string which_plot) {
+void plot_DC_HVscan(TString which_chamber, string which_plot) {
     ExcelSheet test(which_chamber+"/"+"analysis_page_darkCurrent.csv");
     
     // This is the inportant bit! The first value refers to the excel sheet above. The second number is

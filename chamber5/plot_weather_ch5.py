@@ -68,7 +68,7 @@ p1 = [948.3, 959.5, 959, 957.5, 959.4, 960.8]
 #fig, ax1 = plt.subplots()
 fig = plt.figure(figsize=(7,2.5))
 ax1 = plt.subplot(1,1,1)
-ax1.set_title(r'Dark Current Irr. Layer')
+#ax1.set_title(r'Dark Current Irr. Layer')
 
 ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
 ax1.set_xlabel('Dose [mC/cm]')
@@ -95,7 +95,7 @@ p1 = [947.7, 960.5, 957.1, 957.9, 954.4, 960.1]
 #fig, ax1 = plt.subplots()
 fig = plt.figure(figsize=(7,2.5))
 ax1 = plt.subplot(1,1,1)
-ax1.set_title(r'Dark Current Ref. Layer')
+#ax1.set_title(r'Dark Current Ref. Layer')
 
 ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
 ax1.set_xlabel('Dose [mC/cm]')
