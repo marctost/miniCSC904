@@ -130,14 +130,14 @@ int graph_section(TString which_chamber, string filename, PlotterLines graphLine
         sub = " ";
     }
     if (irr_or_ref=="irr"){
-        layer = " Irradiated Layer (3,1)";
+        layer = " Irradiated Layer, Hole (3,1)";
     }
     if (irr_or_ref=="irr_irr"){
-        layer = " Irradiated Layer (2,2) (Irr)";
+        layer = " Irradiated Layer, Hole (2,2) (Irr.)";
         move_color=8;
     }
     else if (irr_or_ref=="ref"){
-        layer = " Reference Layer (2,2)";
+        layer = " Reference Layer, Hole (2,2)";
     }
     else if (irr_or_ref=="dark"){
         layer = " Dark Rate";

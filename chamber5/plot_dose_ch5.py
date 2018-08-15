@@ -6,6 +6,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.dates import DateFormatter
 
+os.system("mkdir -p Plots/")
+
 formatter = DateFormatter('%d/%m')
 date0 = datetime.date(2018, 4, 9)
 date1 = datetime.date(2018, 5, 24)
@@ -27,7 +29,8 @@ ax.xaxis.set_major_formatter(formatter)
 #ax.xaxis.set_tick_params(rotation=30, labelsize=10)
 ax.set_xlabel('Date')
 ax.set_ylabel('Dose [mC/cm]')
-ax.set_title(r'Accumulated Charge: 0% CF$_4$ Run')
+ax.set_title(r'Accumulated Charge for Ar(40%)+CO$_4$(60%) Study')
+
 ## Try annotating the individual points
 #for i,txt in enumerate(runnum):
 #    ax.annotate(txt,(dates[i], doses[i]), horizontalalignment='left')

@@ -115,7 +115,7 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
     else if (norm_or_no=="irr"){
         label = ", Normalized to Irr. Layer (3,1)";
     }
-    title = "Cluster Charge: Landau MPV"+label;
+    title = "Cluster Charge: Gaussian Mean"+label;
     
     
     
