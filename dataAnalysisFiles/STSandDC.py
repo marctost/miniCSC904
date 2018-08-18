@@ -1,18 +1,18 @@
-# -*- coding: utf-8 -*-
+#! /usr/bin/env python3
 """
 Created on Fri Feb 10 09:07:37 2017
 
 @author: Jameson
 """
-
 #NOTE: Set chamber to True for StS, and False for Dark Current!
-
+import os
+import sys
 import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-filename = 'sts-20180118-run11/sts_20180118_x3_300.txt' #input text file
-chamber = True #almost always true O: True for Sts, False for dark current
+filename = 'GIFchamber_run5/DC_Ref_S22_200V_20180814.txt' #input text file
+chamber = False #almost always true O: True for Sts, False for dark current
 points = 1000000
 dt = np.dtype([('time','S19'), ('current', float)])
 
@@ -22,6 +22,8 @@ def expfit(x,a,b,c,d,e):
 def constline(x,a,b,c,d,e):
     return e+0*x
 
+#Read in the input ext file
+#First value is time, second is current
 readin = np.loadtxt(filename,dtype=dt,delimiter='\t')
 length = np.size(readin)
 time = np.zeros(length,dtype='S19')
@@ -40,7 +42,7 @@ if chamber:
     flength = np.size(filtamps)
     
     favg = np.average(filtamps[int(flength * 0.5):])
-    frms = np.sqrt(np.average((filtamps[int(flength * 0.5):] - favg) ** 2))
+    fstdev = np.sqrt(np.average((filtamps[int(flength * 0.5):] - favg) ** 2))
     
     x = np.linspace(0,flength-1,flength)
     popt, pcov = curve_fit(expfit,x,filtamps,p0=np.array([1.52e-10,3.33e-02,1.0e-10,3.0e-03,3.00e-11]))
@@ -53,19 +55,24 @@ if chamber:
 
     no_cap = filtamps - expfit(x, *popt) + popt[4]
     avg = np.average(no_cap[int(flength * 0.5):])
-    rms = np.sqrt(np.average((no_cap[int(flength * 0.5):] - avg) ** 2))
+    stdev = np.sqrt(np.average((no_cap[int(flength * 0.5):] - avg) ** 2))
 
 else:
+    #First take the average and find the spread in this (Gaussian) distribution
     avg = np.average(amps)
-    rms = np.sqrt(np.average((amps - avg) ** 2))
+    stdev = np.sqrt(np.average((amps - avg) ** 2))
     
-    included = np.abs(amps - avg) < (3 * rms)
+    #Take all "amps" values such that the abs of the deviation from the average is within 3 sigma
+    included = np.abs(amps - avg) < (3 * stdev)
     filteravg = np.average(amps[included])
-    filterrms = np.sqrt(np.average((amps[included] - avg) ** 2))
+    filterstdev = np.sqrt(np.average((amps[included] - avg) ** 2))
+    
+    #Acceptance efficiency
     accept_rate = np.size(amps[included]) / np.size(amps)
     
-    uplim = np.ones(length) * (avg + 3 * rms)
-    lolim = np.ones(length) * (avg - 3 * rms)
+    #Draw lines for the upper and lower limits of the current values within the filtered range
+    uplim = np.ones(length) * (avg + 3 * stdev)
+    lolim = np.ones(length) * (avg - 3 * stdev)
 
 # --------------------------------------------------
     
@@ -82,11 +89,12 @@ else:
     plt.plot(amps)
     plt.plot(uplim,'r-')
     plt.plot(lolim,'r-')
+#    plt.ylim(np.abs(lolim[0]), 1.2*np.abs(uplim[0]))
     plt.show()
 
 plt.xlabel('Point Number')
 plt.ylabel('Current (A)')
-print(filename)
+print("\n--------> "+filename)
 
 # --------------------------------------------------
 
@@ -96,14 +104,14 @@ if chamber:
     print('Average: ' + str(avg))
     print('Amps average: ' + str(np.average(filtamps[int(flength * 0.5):])))
     print('Fit Constant: ' + str(popt[4]) + ' +/- ' + str(perr[4]))
-    print('RMS: ' + str(rms))
+    print('STDEV: ' + str(stdev))
     print('Start time: ' + str(time[0]))
     print('End time: ' + str(time[np.size(filtamps)]))
 if not chamber:
     print('Average: ' + str(avg))
-    print('RMS: ' + str(rms))
+    print('STDEV: ' + str(stdev))
     print('Filtered (within 3 sigma) average: ' + str(filteravg))
-    print('Filtered RMS: ' + str(filterrms))
+    print('Filtered STDEV: ' + str(filterstdev))
     print('Accept rate: ' + str(accept_rate))
     print('Start time: ' + str(time[0]))
     print('End time: ' + str(time[np.size(amps)-1]))
