@@ -1,9 +1,9 @@
 #include "snippet.C"
+#include "root_tools.h"
+#include "plotting_functions.h"
+#include <vector>
 
-int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
-TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
-float Get_average_val_ref(PlotterLines run);
-TGraph* format_me(TGraph* graph, Color_t color);
+int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, vector<PlotterLines> run);
 
 void plot_cluster_charge(TString which_chamber, string which_plot, string norm_or_no) {
     ExcelSheet test(which_chamber+"/"+"analysis_page_cluster.csv");
@@ -27,84 +27,15 @@ void plot_cluster_charge(TString which_chamber, string which_plot, string norm_o
     PlotterLines run_9(test, 2, 14, 10, 1);
     PlotterLines run_10(test, 2, 14, 11, 1);
     
-    graph_section(which_chamber, which_plot,norm_or_no, hole_num, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-}
-
-
-float Get_average_val_ref(PlotterLines run){
-    float divide=2;
-    float tot=0;
-    for (int i=10;i<12;i++){
-        if (run.lines[0].at(i)==0){
-            divide=divide-1;
-            continue;
-        }
-        tot = tot+run.lines[0].at(i);
-    }
-    return tot/divide;
-}
-
-// Makes the graphs
-TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
-    TGraph *graph = new TGraph(6);
+    vector<PlotterLines> run;
+    run.push_back(run_0); run.push_back(run_1); run.push_back(run_2); run.push_back(run_3); run.push_back(run_4); run.push_back(run_5); run.push_back(run_6); run.push_back(run_7); run.push_back(run_8); run.push_back(run_9); run.push_back(run_10);
     
-    // Note the the first number is the "point number" and will always be 0-4, the second number the accumlated charge, and the last number is charge mean
-
-    if (norm_or_no=="ref"){
-        graph->SetPoint(0, 0, run_0.lines[0].at(i)/run_0.lines[0].at(11));
-        graph->SetPoint(1, 53, run_1.lines[0].at(i)/run_1.lines[0].at(11));
-        graph->SetPoint(2, 95, run_2.lines[0].at(i)/run_2.lines[0].at(11));
-        graph->SetPoint(3, 121, run_3.lines[0].at(i)/run_3.lines[0].at(11));
-        graph->SetPoint(4, 149, run_4.lines[0].at(i)/run_4.lines[0].at(11));
-        graph->SetPoint(5, 180, run_5.lines[0].at(i)/run_5.lines[0].at(11));
-        //graph->SetPoint(6, 200, run_6.lines[0].at(i)/run_6.lines[0].at(11));
-        //graph->SetPoint(7, 205, run_7.lines[0].at(i)/run_7.lines[0].at(11));
-        //graph->SetPoint(8, 210, run_8.lines[0].at(i)/run_8.lines[0].at(11));
-        //graph->SetPoint(9, 215, run_9.lines[0].at(i)/run_9.lines[0].at(11));
-        //graph->SetPoint(10, 220, run_10.lines[0].at(i)/run_10.lines[0].at(11));
-    }
-    else if (norm_or_no=="irr"){
-        graph->SetPoint(0, 0, run_0.lines[0].at(i)/run_0.lines[0].at(5));
-        graph->SetPoint(1, 53, run_1.lines[0].at(i)/run_1.lines[0].at(5));
-        graph->SetPoint(2, 95, run_2.lines[0].at(i)/run_2.lines[0].at(5));
-        graph->SetPoint(3, 121, run_3.lines[0].at(i)/run_3.lines[0].at(5));
-        graph->SetPoint(4, 149, run_4.lines[0].at(i)/run_4.lines[0].at(5));
-        graph->SetPoint(5, 180, run_5.lines[0].at(i)/run_5.lines[0].at(5));
-        //graph->SetPoint(6, 200, run_6.lines[0].at(i)/run_6.lines[0].at(5));
-        //graph->SetPoint(7, 205, run_7.lines[0].at(i)/run_7.lines[0].at(5));
-        //graph->SetPoint(8, 210, run_8.lines[0].at(i)/run_8.lines[0].at(5));
-        //graph->SetPoint(9, 215, run_9.lines[0].at(i)/run_9.lines[0].at(5));
-        //graph->SetPoint(10, 220, run_10.lines[0].at(i)/run_10.lines[0].at(5));
-    }
-    else{
-        graph->SetPoint(0, 0, run_0.lines[0].at(i));
-        graph->SetPoint(1, 53, run_1.lines[0].at(i));
-        graph->SetPoint(2, 95, run_2.lines[0].at(i));
-        graph->SetPoint(3, 121, run_3.lines[0].at(i));
-        graph->SetPoint(4, 149, run_4.lines[0].at(i));
-        graph->SetPoint(5, 180, run_5.lines[0].at(i));
-        //graph->SetPoint(6, 200, run_6.lines[0].at(i));
-        //graph->SetPoint(7, 205, run_7.lines[0].at(i));
-        //graph->SetPoint(8, 210, run_8.lines[0].at(i));
-        //graph->SetPoint(9, 215, run_9.lines[0].at(i));
-        //graph->SetPoint(10, 220, run_10.lines[0].at(i));
-    }
-    return graph;
-}
-
-TGraph* format_me(TGraph* graph, Color_t color){
-    graph->SetLineColor(color);
-    graph->SetMarkerStyle(20);
-    graph->SetMarkerSize(0.8);
-    graph->SetMarkerColor(color);
-    graph->SetLineWidth(2.0);
     
-    return graph;
+    graph_section(which_chamber, which_plot,norm_or_no, hole_num, run);
 }
 
 
-
-int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
+int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, vector<PlotterLines> run){
 	
     TString title;
     TString label;
@@ -142,53 +73,27 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
 	gStyle->SetOptStat(2210);
 	gStyle->SetTitleAlign(23);
 
-	//References for changing margins and the size of the canvas
-	int H = 800;
-	int W = H;
-	float T = 0.08*H;
-	float B = 0.12*H;
-	float L = 0.12*W;
-	float R = 0.04*W;
-	float x1_l = 0.38;
-	float y1_l = 0.90;
-	float dx_l = 0.20;
-	float dy_l = 0.20;
-	float x0_l = x1_l-dx_l;
-	float y0_l = y1_l-dy_l;
+    TCanvas *canvas = make_canvas();
+    TLegend *legend = make_legend();
+    canvas->cd();
 
-	//make the canvas, set its properties
-	TCanvas *canvas = new TCanvas("c2","c2",50,50,W,H);
-	canvas->SetFillColor(0);
-	canvas->SetBorderMode(0);
-	canvas->SetFrameFillStyle(0);
-	canvas->SetFrameBorderMode(0);
-	canvas->SetLeftMargin( L/W );
-	canvas->SetRightMargin( R/W );
-	canvas->SetTopMargin( T/H );
-	canvas->SetBottomMargin( B/H );
-	canvas->cd();
-
-	//the legend happens
-	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
-	legend->SetBorderSize(1);
-
-    // This function takes the line (which has been correctly sized), and then loops through and returns graphs.
-    TGraph* graph_irr_2_1 = make_graph(norm_or_no,3,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_irr_2_2 = make_graph(norm_or_no,4,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_irr_3_1 = make_graph(norm_or_no,5,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_irr_3_2 = make_graph(norm_or_no,6,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_ref_2_2 = make_graph(norm_or_no,10,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_ref_3_1 = make_graph(norm_or_no,11,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    // This function takes the line, and then loops through and returns graphs.
+    TGraph* graph_irr_2_1 = make_graph_cluster(norm_or_no,3,run);
+    TGraph* graph_irr_2_2 = make_graph_cluster(norm_or_no,4,run);
+    TGraph* graph_irr_3_1 = make_graph_cluster(norm_or_no,5,run);
+    TGraph* graph_irr_3_2 = make_graph_cluster(norm_or_no,6,run);
+    TGraph* graph_ref_2_2 = make_graph_cluster(norm_or_no,10,run);
+    TGraph* graph_ref_3_1 = make_graph_cluster(norm_or_no,11,run);
     
-    TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6]);
-    TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7]);
-    TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8]);
-    TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9]);
-    TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0]);
-    TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1]);
+    TGraph* fin_graph_irr_2_1 = format_me_cluster(graph_irr_2_1, colors[6]);
+    TGraph* fin_graph_irr_2_2 = format_me_cluster(graph_irr_2_2, colors[7]);
+    TGraph* fin_graph_irr_3_1 = format_me_cluster(graph_irr_3_1, colors[8]);
+    TGraph* fin_graph_irr_3_2 = format_me_cluster(graph_irr_3_2, colors[9]);
+    TGraph* fin_graph_ref_2_2 = format_me_cluster(graph_ref_2_2, colors[0]);
+    TGraph* fin_graph_ref_3_1 = format_me_cluster(graph_ref_3_1, colors[1]);
     
     
-    // Still the legend, label by hand
+    //  legend, label by hand
     if (norm_or_no=="irr") {
         legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
         legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
