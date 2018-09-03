@@ -2,7 +2,7 @@
 
 int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 
-TGraph* make_graph(int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
+TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 
 float Get_average_val_irr(PlotterLines run);
 float Get_average_val_ref(PlotterLines run);
@@ -11,23 +11,32 @@ TGraph* format_me(TGraph* graph, Color_t color);
 void plot_strip(TString which_chamber) {
     ExcelSheet test(which_chamber+"/"+"analysis_page_strip.csv");
 
-    // This is the important bit! The first value refers to the excel sheet above. The second number is
-    // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
-    // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
-    // last number is the number of adjacent columns you're using. Make sure to remember that things start
-    // at zero!! So be careful.
+    //PlotterLines constructor args --
+    //1st arg: excel spreadsheet
+    //2nd arg: starting row (counts from 0)
+    //3rd arg: ending row (counts from 0)
+    //4th arg: column index (counts from 0)
+    //5th arg: number of columns
     
-    PlotterLines run_0(test, 2, 5, 0, 2);
-    PlotterLines run_1(test, 2, 5, 3, 2);
-    PlotterLines run_2(test, 2, 5, 6, 2);
-    PlotterLines run_3(test, 2, 5, 9, 2);
-    PlotterLines run_4(test, 2, 5, 12, 2);
-    PlotterLines run_5(test, 2, 5, 15, 2);
-    PlotterLines run_6(test, 2, 5, 18, 2);
-    PlotterLines run_7(test, 2, 5, 21, 2);
-    PlotterLines run_8(test, 2, 5, 24, 2);
-    PlotterLines run_9(test, 2, 5, 27, 2);
-    PlotterLines run_10(test, 2, 5, 30, 2);
+    int endingRow;
+    if (which_chamber == "chamber5"){
+        endingRow = 5;
+    }
+    else if (which_chamber == "chamber4"){
+        endingRow = 9;
+    }
+    
+    PlotterLines run_0(test, 2, endingRow, 0, 2);
+    PlotterLines run_1(test, 2, endingRow, 3, 2);
+    PlotterLines run_2(test, 2, endingRow, 6, 2);
+    PlotterLines run_3(test, 2, endingRow, 9, 2);
+    PlotterLines run_4(test, 2, endingRow, 12, 2);
+    PlotterLines run_5(test, 2, endingRow, 15, 2);
+    PlotterLines run_6(test, 2, endingRow, 18, 2);
+    PlotterLines run_7(test, 2, endingRow, 21, 2);
+    PlotterLines run_8(test, 2, endingRow, 24, 2);
+    PlotterLines run_9(test, 2, endingRow, 27, 2);
+    PlotterLines run_10(test, 2, endingRow, 30, 2);
     
     graph_section(which_chamber, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
 }
@@ -35,23 +44,33 @@ void plot_strip(TString which_chamber) {
 
 
 // Makes the graphs
-TGraph* make_graph(int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
-    TGraph *graph = new TGraph(6);
+TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
     
-    // Creating the TGraph and filling it with 5 points (number of runs)
-    // The first number is the "point number" and will always be 0-4. the second number is x-axis, which is the accumulated charge, and has to be entered by hand. The last number is charge mean, where the at(i) refers to which wire pair is currently being looked at
-
-    graph->SetPoint(0, 0, run_0.lines[1].at(i));
-    graph->SetPoint(1, 53, run_1.lines[1].at(i));
-    graph->SetPoint(2, 95, run_2.lines[1].at(i));
-    graph->SetPoint(3, 121, run_3.lines[1].at(i));
-    graph->SetPoint(4, 149, run_4.lines[1].at(i));
-    graph->SetPoint(5, 180, run_5.lines[1].at(i));
-    //graph->SetPoint(5, 200, run_6.lines[1].at(i));
-    //graph->SetPoint(5, 205, run_7.lines[1].at(i));
-    //graph->SetPoint(5, 210, run_8.lines[1].at(i));
-    //graph->SetPoint(5, 220, run_9.lines[1].at(i));
-    //graph->SetPoint(5, 230, run_10.lines[1].at(i));
+    int numRuns = 6;
+    
+    std::vector<double> chamberDose;
+    if (which_chamber.Contains("chamber5")){
+        chamberDose = {0, 53, 95, 121, 149, 180, 209., 0., 0., 0., 0.};
+    }
+    else if (which_chamber.Contains("chamber4")){
+        chamberDose = {0., 17., 26., 68., 123., 157., 0., 0., 0., 0., 0.};
+    }
+    
+    TGraph *graph = new TGraph(numRuns);
+    
+    // Note the the first number is the "point number" and will always be 0-11,
+    // the second number the accumlated charge, and the last number is the value
+    graph->SetPoint(0, chamberDose[0], run_0.lines[1].at(i));
+    graph->SetPoint(1, chamberDose[1], run_1.lines[1].at(i));
+    graph->SetPoint(2, chamberDose[2], run_2.lines[1].at(i));
+    graph->SetPoint(3, chamberDose[3], run_3.lines[1].at(i));
+    graph->SetPoint(4, chamberDose[4], run_4.lines[1].at(i));
+    graph->SetPoint(5, chamberDose[5], run_5.lines[1].at(i));
+    //graph->SetPoint(6, chamberDose[6], run_6.lines[1].at(i));
+    //graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
+    //graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
+    //graph->SetPoint(9, chamberDose[9], run_9.lines[1].at(i));
+    //graph->SetPoint(10, chamberDose[10], run_10.lines[1].at(i));
     
     return graph;
 }
@@ -68,14 +87,7 @@ TGraph* format_me(TGraph* graph, Color_t color){
 }
 
 int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
-	
-    // For this plot, the "i" in graphLine.line[thing].at(i) refers to the wire pair being used,
-    // following the formula i+1 i.e. at(0) is pair 1, etc
     
-    
-    Color_t colors[] = {kBlue-10, kBlue-7, kBlue, kBlue+2, kAzure+4, kAzure+1, kRed, kRed+3, kRed-6, kOrange-3, kRed-3, kOrange+4, kPink, kGreen};
-    
-	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
 //    gStyle->SetTitleAlign(13);
@@ -87,10 +99,13 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
 	float B = 0.12*H;
 	float L = 0.12*W;
 	float R = 0.04*W;
-	float x1_l = 0.48;
-	float y1_l = 0.90;
+    
+//    float x1_l = 0.48;
+//    float y1_l = 0.90;
+    float x1_l = 0.96;
+    float y1_l = 0.92;
 	float dx_l = 0.30;
-	float dy_l = 0.30;
+	float dy_l = 0.25;
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
 
@@ -110,33 +125,78 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
     
-    // This function takes the line (which has been correctly sized), and then loops through and returns graphs for the corresponding wire pair
-    TGraph* graph_pair_1 = make_graph(0,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_pair_2 = make_graph(1,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_pair_3 = make_graph(2,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
-    TGraph* graph_pair_4 = make_graph(3,run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+    Color_t colors[] = {kBlue-10, kBlue-7, kBlue, kBlue+2, kAzure+4, kAzure+1, kRed, kRed+3, kRed-6, kOrange-3, kRed-3, kOrange+4, kPink, kGreen};
     
-    
-    //Run the plots through the formater, select the desired colors from the list at beginning of function
-    TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[7]);
-    TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[6]);
-    TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[1]);
-    TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
-    
-    // Label the legend by hand
-    legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (irr layer) (irr)");
-    legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (irr layer)");
-    legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref)");
-    legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref)");
-
-    
-    // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();
     
-    mg->Add(fin_graph_pair_1);
-    mg->Add(fin_graph_pair_2);
-    mg->Add(fin_graph_pair_3);
-    mg->Add(fin_graph_pair_4);
+    if (which_chamber=="chamber5"){
+        // This function takes the line (which has been correctly sized), and then loops through and returns graphs for the corresponding wire pair
+        TGraph* graph_pair_1 = make_graph(which_chamber, 0, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_2 = make_graph(which_chamber, 1, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_3 = make_graph(which_chamber, 2, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_4 = make_graph(which_chamber, 3, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        
+        //Run the plots through the formater, select the desired colors from the list at beginning of function
+        TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[7]);
+        TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[6]);
+        TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[1]);
+        TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
+        
+        // Label the legend by hand
+        legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (irr layer) (irr)");
+        legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (irr layer)");
+        legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref layer)");
+        legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref layer)");
+        
+        // Make a multigraph to put all the stuff into and draw all at once.
+        mg->Add(fin_graph_pair_1);
+        mg->Add(fin_graph_pair_2);
+        mg->Add(fin_graph_pair_3);
+        mg->Add(fin_graph_pair_4);
+    }
+    else if (which_chamber=="chamber4"){
+        // This function takes the line (which has been correctly sized), and then loops through and returns graphs for the corresponding wire pair
+        TGraph* graph_pair_1 = make_graph(which_chamber, 0, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_2 = make_graph(which_chamber, 1, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_3 = make_graph(which_chamber, 2, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_4 = make_graph(which_chamber, 3, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_5 = make_graph(which_chamber, 4, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_6 = make_graph(which_chamber, 5, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_7 = make_graph(which_chamber, 6, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        TGraph* graph_pair_8 = make_graph(which_chamber, 7, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
+        
+        //Run the plots through the formater, select the desired colors from the list at beginning of function
+        TGraph* fin_graph_pair_1 = format_me(graph_pair_1, colors[0]);
+        TGraph* fin_graph_pair_2 = format_me(graph_pair_2, colors[3]);
+        TGraph* fin_graph_pair_3 = format_me(graph_pair_3, colors[1]);
+        TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
+        TGraph* fin_graph_pair_5 = format_me(graph_pair_5, colors[7]);
+        TGraph* fin_graph_pair_6 = format_me(graph_pair_6, colors[6]);
+        TGraph* fin_graph_pair_7 = format_me(graph_pair_7, colors[8]);
+        TGraph* fin_graph_pair_8 = format_me(graph_pair_8, colors[9]);
+        
+        // Label the legend by hand
+        legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (ref layer)");
+        legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (ref layer)");
+        legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref layer)");
+        legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref layer)");
+        legend->AddEntry(fin_graph_pair_5, "Wire pair 5 (irr layer)");
+        legend->AddEntry(fin_graph_pair_6, "Wire pair 6 (irr layer)");
+        legend->AddEntry(fin_graph_pair_7, "Wire pair 7 (irr layer)");
+        legend->AddEntry(fin_graph_pair_8, "Wire pair 8 (irr layer)");
+        
+        // Make a multigraph to put all the stuff into and draw all at once.
+        mg->Add(fin_graph_pair_1);
+        mg->Add(fin_graph_pair_2);
+        mg->Add(fin_graph_pair_3);
+        mg->Add(fin_graph_pair_4);
+        mg->Add(fin_graph_pair_5);
+        mg->Add(fin_graph_pair_6);
+        mg->Add(fin_graph_pair_7);
+        mg->Add(fin_graph_pair_8);
+    }
+
+    
     
     canvas->SetLogy();
     
@@ -150,11 +210,9 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
     mg->GetYaxis()->SetTitle("Resistance (TOhms)");
     // Set the y range so that the legend doesn't cover up any points
-    mg->GetYaxis()->SetRangeUser(0.05, 220);
+    mg->GetYaxis()->SetRangeUser(0.01, 1000);
 	legend->Draw("SAME");
 
-    
-    
     // Locate where it goes and gets saved
     system("mkdir -p "+which_chamber+"/"+"Plots/");
     TString saveWhere = which_chamber+"/"+"Plots/strip_to_strip.pdf";

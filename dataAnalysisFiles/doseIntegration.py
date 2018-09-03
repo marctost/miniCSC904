@@ -1,41 +1,61 @@
 # -*- coding: utf-8 -*-
-"""
-Created on Thu May  4 20:06:03 2017
-
-@author: Jameson, Ota - fix to the calculation
-"""
-
+import os
+import sys
 import numpy as np
 import datetime as dt
+import matplotlib.pyplot as plt
 
-filename = 'dosefile.txt' #input text file
+filename = '2018-08-23.txt' #input text file
 cross_section = 13.4 #precalculated value (related to cross section)
 
 readin = np.genfromtxt(filename, delimiter = '\t')
-
 VSet = readin[:,1] #the voltage set on the CAEN (through LabWindows)
-VMon = readin[:,2] #the current read out from CAEN
+VMon = readin[:,2] #the voltage read out from the CAEN
 IMon = readin[:,3] * 0.000001 #converts current from muAmp to Amps
+print ("\nSuccessfully read in data")
+
+#############################
+## Doesn't work yet
+#dataType = np.dtype([('time','S19'), ('vset', float), ('vmon',float), ('current', float)])
+#readin = np.loadtxt(filename, dtype=dataType, delimiter = '\t')
+#
+#length = np.size(readin)
+#Time = np.zeros(length,dtype='S19')
+#VSet = np.zeros(length)
+#VMon = np.zeros(length)
+#IMon = np.zeros(length)
+#
+#for i in range(int(999*length/1000), length):
+#    Time[i] = readin[i][0]
+#    VSet[i] = readin[i][1]
+#    VMon[i] = readin[i][2]
+#    IMon[i] = readin[i][3] * 0.000001 #converts current from muAmp to Amps
+#print ("\nSuccessfully read in data")
+#############################
 
 #start_time = input("Time of dose beginning in format YYYY-MM-DD HH:MM:SS: ")
 #end_time = input("Time of dose ending in format YYYY-MM-DD HH:MM:SS: ")
 
 #Put in the time values by hand (for now)
-start = dt.datetime(2018, 01, 22, 14, 02, 18)
+start = dt.datetime(2018, 8, 23, 14, 44, 40)
+stop = dt.datetime(2018, 8, 28, 16, 15, 39)
 #stop = dt.datetime(int(end_time[0:4]), int(end_time[5:7]), int(end_time[8:10]), int(end_time[11:13]), int(end_time[14:16]), int(end_time[17:19]))
 #stop = dt.datetime((end_time[0:4]), (end_time[4:6]), (end_time[6:8]), (end_time[8:10]), (end_time[10:12]), (end_time[12:14]))
-stop = dt.datetime(2018, 02, 04, 11, 25, 28)
+
 
 total_time = (stop - start).total_seconds()
 
-print "Total time is "+str(total_time)+" seconds"
+print "\n----- Total time is "+str(int(total_time))+" seconds"
 
 tint = total_time / (len(readin)-1) #amount of time between each current reading
 
 dose = 0
+IAccept = []
 
 for ind in range(0,len(readin)-1):
     if abs(VSet[ind] - VMon[ind]) <= 5.0 and abs(VSet[ind + 1] - VMon[ind + 1]) <= 5.0 and min(IMon[ind], IMon[ind + 1]) > 0:
+
+        IAccept.append(IMon[ind])
 
         ### charge accumulated in each time bin is the average current multiplied by the delta-T between current readings.
         ### the 0.6666 factor is from assuming the current irradiates the chamber hole within a Gaussian profile,
@@ -44,5 +64,23 @@ for ind in range(0,len(readin)-1):
 
 dose /= cross_section
 
-print "Accumulated charge (dose): "+str(dose)
+IAcceptAvg = np.average(IAccept)
+IAcceptDev = []
+for i in range(len(IAccept)):
+    IAcceptDev.append( (IAccept[i]-IAcceptAvg)*(IAccept[i]-IAcceptAvg) )
+IAcceptSTDEV = np.sqrt(sum(IAcceptDev)/len(IAcceptDev))
+
+print "Average value (rounded) of accepted current values [A]: "+str( round(IAcceptAvg, 10) )
+print "STDEV of accepted current values [A]: "+str( round(IAcceptSTDEV, 11) )
+print "Accumulated charge [C/cm]: "+str(dose)
+
+#fig, ax1 = plt.subplots()
+#ax1.set_xlabel('Time')
+#ax1.set_ylabel('Current [A]')
+#ax1.set_title(r'Irradiation Current')
+##ax1.plot(IAcceptAvg,'r-')
+#ax1.plot(Time, IMon)
+#
+#
+#plt.show()
 

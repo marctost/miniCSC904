@@ -11,8 +11,8 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-filename = 'GIFchamber_run5/DC_Ref_S22_200V_20180814.txt' #input text file
-chamber = False #almost always true O: True for Sts, False for dark current
+filename = 'GIFchamber_run5/sts_x6_300V_right.txt' #input text file
+chamber = True #almost always true O: True for Sts, False for dark current
 points = 1000000
 dt = np.dtype([('time','S19'), ('current', float)])
 
@@ -46,7 +46,7 @@ if chamber:
     
     x = np.linspace(0,flength-1,flength)
     popt, pcov = curve_fit(expfit,x,filtamps,p0=np.array([1.52e-10,3.33e-02,1.0e-10,3.0e-03,3.00e-11]))
-#,sigma=frms,absolute_sigma=True) 
+#,sigma=frms,absolute_sigma=True)
 #,bounds=(0,np.inf)
     #popt, pcov = curve_fit(expfit,x,filtamps,p0=np.array([6.52e-11,1.33e-02,2.59e-10,1.97e-01,3.00e-9]))
 #,sigma=frms,absolute_sigma=True) 

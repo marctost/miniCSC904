@@ -16,36 +16,38 @@
 
 class ExcelSheet {
 public:
-  ExcelSheet(TString filename) {
-    ifstream f(filename);
-
+    ExcelSheet(TString filename) {
+//        std::cout << "Loading file: " << filename << std::endl;
+        ifstream f(filename);
   
-    string line;
-    while(getline(f, line)) {
-      vector<string> tmpSplit;
-      boost::split(tmpSplit, line, [](char c){return c == ',';});
-      Row.push_back(tmpSplit);
-        
-      if(Column.size() == 0) {
-	Column.resize(tmpSplit.size());
-      } else if(Column.size() < tmpSplit.size()) {
-    exit(1);
-      }
-      for(int i = 0; i < tmpSplit.size(); i++) {
-	Column[i].push_back(tmpSplit.at(i));
-      }
-      if(Column.size() > tmpSplit.size()) {
-	for(int i = tmpSplit.size(); i < Column.size(); i++) {
-	  Column[i].push_back("");
-	}
-      }
-    }
-    f.close();
+        string line;
+        while(getline(f, line)) {
+            vector<string> tmpSplit;
+            boost::split(tmpSplit, line, [](char c){return c == ',';});
+            Row.push_back(tmpSplit);
+            
+            if(Column.size() == 0) {
+                Column.resize(tmpSplit.size());
+            }
+            else if(Column.size() < tmpSplit.size()) {
+                exit(1);
+            }
+            for(int i = 0; i < tmpSplit.size(); i++) {
+                Column[i].push_back(tmpSplit.at(i));
+            }
+            if(Column.size() > tmpSplit.size()) {
+                for(int i = tmpSplit.size(); i < Column.size(); i++) {
+                    Column[i].push_back("");
+                }
+            }
+        }
+        std::cout << "Loaded csv file!" << std::endl;
+        f.close();
   }
 
   vector<vector<string> > Column;
   vector<vector<string> > Row;
-  
+    
 };
 
 template <typename T>

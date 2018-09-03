@@ -5,12 +5,6 @@ TGraph* make_graph(PlotterLines voltage, PlotterLines graph_line);
 
 void plot_gas_gain(TString which_chamber) {
     ExcelSheet test(which_chamber+"/"+"analysis_page_gasGain.csv");
-
-    // This is the important bit! The first value (test) refers to the excel sheet above. The second number is
-    // the row you start on. The second number is the lowest row you go to. Doesn't have to be exact,
-    // we have a function that makes things perfect. The 3rd number is the column that you're pulling. The
-    // last number is the number of adjacent columns you're using. Make sure to remember that things start
-    // at zero!! So be careful.
    
     PlotterLines voltage(test, 1, 12, 0, 1);
     PlotterLines run_0(test, 1, 12, 1, 1);
@@ -92,52 +86,47 @@ int graph_section(TString which_chamber, int zoom, PlotterLines voltage, Plotter
 	TLegend *legend = new TLegend(x0_l,y0_l,x1_l,y1_l,"","brNDC");
 	legend->SetBorderSize(1);
 
-    // This is where the graphs are made. Given argument voltage, which run to do, the color and the transparency of the color. Formatting is done here too.
-    TGraph* graph_0 = make_graph(voltage, run_0, kRed, 0.1);
-    TGraph* graph_1 = make_graph(voltage, run_1, kRed, 0.2);
-    TGraph* graph_2 = make_graph(voltage, run_2, kRed, 0.3);
-    TGraph* graph_3 = make_graph(voltage, run_3, kRed, 0.4);
-    TGraph* graph_4 = make_graph(voltage, run_4, kRed, 0.5);
-     TGraph* graph_5 = make_graph(voltage, run_5, kRed+2, 1);
-    // TGraph* graph_6 = make_graph(voltage, run_6, kRed, 0.7);
-    // TGraph* graph_7 = make_graph(voltage, run_7, kRed, 0.1);
-    // TGraph* graph_8 = make_graph(voltage, run_8, kRed, 0.1);
-    // TGraph* graph_9 = make_graph(voltage, run_9, kRed, 0.1);
-    // TGraph* graph_10 = make_graph(voltage, run_10, kRed, 0.1);
-
     
-
-    
-    // Label the legend by hand
-    legend->AddEntry(graph_0, "Run 0, 0 mC/cm");
-    legend->AddEntry(graph_1, "Run 1, 18 mC/cm");
-    legend->AddEntry(graph_2, "Run 2, 26 mC/cm");
-    legend->AddEntry(graph_3, "Run 3, 65 mC/cm");
-    legend->AddEntry(graph_4, "Run 4, 125 mC/cm");
-    legend->AddEntry(graph_5, "Run 5, 180 mC/cm");
-    //legend->AddEntry(graph_6, "Run 6, ? mC/cm");
-    //legend->AddEntry(graph_7, "Run 7, ? mC/cm");
-    //legend->AddEntry(graph_8, "Run 8, ? mC/cm");
-    //legend->AddEntry(graph_9, "Run 9, ? mC/cm");
-    //legend->AddEntry(graph_10, "Run 10, ? mC/cm");
-    
-    
-    // Make a multigraph to put all the stuff into and draw all at once.
     TMultiGraph *mg = new TMultiGraph();
     
-    mg->Add(graph_0);
-    mg->Add(graph_1);
-    mg->Add(graph_2);
-    mg->Add(graph_3);
-    mg->Add(graph_4);
-    mg->Add(graph_5);
-    //mg->Add(graph_6);
-    //mg->Add(graph_7);
-    //mg->Add(graph_8);
-    //mg->Add(graph_9);
-    //mg->Add(graph_10);
-    
-    
+    if (which_chamber=="chamber5"){
+        TGraph* graph_0 = make_graph(voltage, run_0, kRed, 0.1);
+        TGraph* graph_1 = make_graph(voltage, run_1, kRed, 0.2);
+        TGraph* graph_2 = make_graph(voltage, run_2, kRed, 0.3);
+        TGraph* graph_3 = make_graph(voltage, run_3, kRed, 0.4);
+        TGraph* graph_4 = make_graph(voltage, run_4, kRed, 0.5);
+        TGraph* graph_5 = make_graph(voltage, run_5, kRed+2, 1);
+        TGraph* graph_6 = make_graph(voltage, run_6, kRed, 0.7);
+        TGraph* graph_7 = make_graph(voltage, run_7, kRed, 0.1);
+        TGraph* graph_8 = make_graph(voltage, run_8, kRed, 0.1);
+        TGraph* graph_9 = make_graph(voltage, run_9, kRed, 0.1);
+        TGraph* graph_10 = make_graph(voltage, run_10, kRed, 0.1);
+        
+        legend->AddEntry(graph_0, "Run 0, 0 mC/cm");
+        legend->AddEntry(graph_1, "Run 1, 18 mC/cm");
+        legend->AddEntry(graph_2, "Run 2, 26 mC/cm");
+        legend->AddEntry(graph_3, "Run 3, 65 mC/cm");
+        legend->AddEntry(graph_4, "Run 4, 125 mC/cm");
+        legend->AddEntry(graph_5, "Run 5, 180 mC/cm");
+//        legend->AddEntry(graph_6, "Run 6, 209 mC/cm");
+//        legend->AddEntry(graph_7, "Run 7, ? mC/cm");
+//        legend->AddEntry(graph_8, "Run 8, ? mC/cm");
+//        legend->AddEntry(graph_9, "Run 9, ? mC/cm");
+//        legend->AddEntry(graph_10, "Run 10, ? mC/cm");
+        
+        mg->Add(graph_0);
+        mg->Add(graph_1);
+        mg->Add(graph_2);
+        mg->Add(graph_3);
+        mg->Add(graph_4);
+        mg->Add(graph_5);
+//        mg->Add(graph_6);
+//        mg->Add(graph_7);
+//        mg->Add(graph_8);
+//        mg->Add(graph_9);
+//        mg->Add(graph_10);
+    }
+ 
     // title
     mg->SetTitle(title);
     
@@ -168,8 +157,6 @@ int graph_section(TString which_chamber, int zoom, PlotterLines voltage, Plotter
     }
     
 	legend->Draw("SAME");
-    
-    
 
     // Save plot
     system("mkdir -p "+which_chamber+"/"+"Plots/");

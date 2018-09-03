@@ -14,7 +14,11 @@ from scipy.optimize import curve_fit
 ## Tweak ndivisions such that the division of sections makes sense
 ## The last current section should be a well-defined single section
 
-filename = 'GIFchamber_run5/DC_Ref_S22_200V_20180814.txt' #input text file
+#########################################################
+filename = 'GIFchamber_run5/DC_Ref_NoS_4000V_20180814.txt' #input text file
+ndivisions = 6 #This value is meant to be tweaked to make how we divide the current into sections make sense
+#########################################################
+
 points = 1000000
 dt = np.dtype([('time','S19'), ('current', float)])
 
@@ -25,8 +29,8 @@ length = np.size(readin)
 time = np.zeros(length,dtype='S19')
 amps = np.zeros(length)
 for i in range(0,length):
-    time[i] = readin[i][0] #all rows and zeroeth column
-    amps[i] = readin[i][1] #all rows and in first column
+    time[i] = readin[i][0]
+    amps[i] = readin[i][1]
 
 # --------------------------------------------------
 
@@ -56,7 +60,6 @@ ampsIncluded = amps[included]
 lengthIncluded = length = np.size(ampsIncluded)
 
 #Now divide the current readout into sections and find the average in each section
-ndivisions = 4 #This value is meant to be tweaked to make how we divide the current into sections make sense
 lengthSmall = int(lengthIncluded/ndivisions)
 
 ampSegList = []
@@ -103,13 +106,15 @@ ax1.set_title(r'Dark Current')
 ax1.plot(uplim,'r-')
 ax1.plot(lolim,'r-')
 
-#Plot currents
+### Plot currents in segments
 for i in range(0,ndivisions):
     ax1.plot(xSegList[i],ampSegList[i], color = colorList[i])
-
-#Plot average values for each section
+### Plot average values for each section
 for i in range(0,ndivisions):
     ax1.plot(xSegList[i], avgLines[i], color = 'black')
+
+### Or plot everything
+#ax1.plot(amps)
 
 plt.show()
 
