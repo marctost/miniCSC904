@@ -56,14 +56,16 @@ def main():
       for j in xrange(0,nVoltageIrr):
          if not i:
             histIrr.GetYaxis().SetBinLabel(j+1, str(irrVoltage[j]) )
-         histIrr.SetBinContent(i+1, j+1, listIrrCurrent[i][j])
+         if listIrrCurrent[i][j] > 0:
+            histIrr.SetBinContent(i+1, j+1, listIrrCurrent[i][j])
 
    for i in xrange(0, nRunRef):
       histRef.GetXaxis().SetBinLabel(i+1, str(i) )
       for j in xrange(0,nVoltageRef):
          if not i:
             histRef.GetYaxis().SetBinLabel(j+1, str(refVoltage[j]) )
-         histRef.SetBinContent(i+1, j+1, listRefCurrent[i][j])
+         if listIrrCurrent[i][j] > 0:
+            histRef.SetBinContent(i+1, j+1, listRefCurrent[i][j])
 
    # draw and save histograms
    histIrr.SetContour(200);
