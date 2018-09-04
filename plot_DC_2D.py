@@ -36,6 +36,7 @@ def main():
    refVoltage = [2, 3, 3.6, 4]
    listRefCurrent = []
 
+   # there are some missing data in the CSV. I set it to 0 for now
    for i in range(len(data[0])):
       if data[0][i]:
          listIrrCurrent.append([float(data[j][i+1]) if data[j][i+1] else 0 for j in range(3, 10+1) ])
