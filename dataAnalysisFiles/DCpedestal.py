@@ -15,8 +15,9 @@ from scipy.optimize import curve_fit
 ## The last current section should be a well-defined single section
 
 #########################################################
-filename = 'GIFchamber_run5/DC_Ref_NoS_4000V_20180814.txt' #input text file
-ndivisions = 6 #This value is meant to be tweaked to make how we divide the current into sections make sense
+filename = 'run6dc_GIFchamber/Dark_current_Ref_NoS_4000V.txt' #input text file
+ndivisions = 1 #This value is meant to be tweaked to make how we divide the current into sections make sense
+plotLine = True
 #########################################################
 
 points = 1000000
@@ -110,8 +111,9 @@ ax1.plot(lolim,'r-')
 for i in range(0,ndivisions):
     ax1.plot(xSegList[i],ampSegList[i], color = colorList[i])
 ### Plot average values for each section
-for i in range(0,ndivisions):
-    ax1.plot(xSegList[i], avgLines[i], color = 'black')
+if (plotLine):
+    for i in range(0,ndivisions):
+        ax1.plot(xSegList[i], avgLines[i], color = 'black')
 
 ### Or plot everything
 #ax1.plot(amps)

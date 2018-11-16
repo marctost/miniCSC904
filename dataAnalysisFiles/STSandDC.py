@@ -11,7 +11,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 from scipy.optimize import curve_fit
 
-filename = 'GIFchamber_run5/sts_x6_300V_right.txt' #input text file
+filename = 'run7sts/sts_x4_300V' #input text file
 chamber = True #almost always true O: True for Sts, False for dark current
 points = 1000000
 dt = np.dtype([('time','S19'), ('current', float)])

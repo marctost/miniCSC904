@@ -16,11 +16,11 @@ date3 = datetime.date(2018, 6, 13)
 date4 = datetime.date(2018, 6, 20)
 date5 = datetime.date(2018, 7, 27)
 date6 = datetime.date(2018, 8, 30)
-#date7 = datetime.date(2018, , )
+date7 = datetime.date(2018, 11, 4)
 
-dates = [date0, date1, date2, date3, date4, date5, date6]
-doses = [0, 53, 95, 121, 149, 180, 209]
-runnum = [0, 1, 2, 3, 4, 5, 6]
+dates = [date0, date1, date2, date3, date4, date5, date6, date7]
+doses = [0, 53, 95, 121, 149, 180, 209, 235]
+runnum = [0, 1, 2, 3, 4, 5, 6, 7]
 
 fig, ax = plt.subplots()
 plt.plot_date(dates, doses, color='black', linewidth=1., linestyle='solid', marker = 'o', markersize=5.)
@@ -28,8 +28,8 @@ ax.xaxis.set_major_formatter(formatter)
 #ax.xaxis.set_tick_params(rotation=30, labelsize=10)
 ax.set_xlabel('Date')
 ax.set_ylabel('Dose [mC/cm]')
-ax.set_title(r'Accum. Charge for Ar(40%)+CO$_2$(60%) miniCSC Study')
-ax.set_xlim([datetime.date(2018, 4, 1), datetime.date(2018, 9, 15)])
+ax.set_title(r'Accum. Charge for Ar(40%)+CO$_2$(60%)+CF$_4$(0%) miniCSC Study')
+ax.set_xlim([datetime.date(2018, 4, 1), datetime.date(2018, 11, 25)])
 ax.set_ylim(-10., 300.)
 
 ## Try annotating the individual points

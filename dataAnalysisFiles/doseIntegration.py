@@ -5,7 +5,7 @@ import numpy as np
 import datetime as dt
 import matplotlib.pyplot as plt
 
-filename = '2018-08-23.txt' #input text file
+filename = '7Nov/30oct2018.txt' #input text file
 cross_section = 13.4 #precalculated value (related to cross section)
 
 readin = np.genfromtxt(filename, delimiter = '\t')
@@ -37,8 +37,8 @@ print ("\nSuccessfully read in data")
 #end_time = input("Time of dose ending in format YYYY-MM-DD HH:MM:SS: ")
 
 #Put in the time values by hand (for now)
-start = dt.datetime(2018, 8, 23, 14, 44, 40)
-stop = dt.datetime(2018, 8, 28, 16, 15, 39)
+start = dt.datetime(2018, 10, 30, 15, 9, 32)
+stop = dt.datetime(2018, 11, 4, 20, 36, 59)
 #stop = dt.datetime(int(end_time[0:4]), int(end_time[5:7]), int(end_time[8:10]), int(end_time[11:13]), int(end_time[14:16]), int(end_time[17:19]))
 #stop = dt.datetime((end_time[0:4]), (end_time[4:6]), (end_time[6:8]), (end_time[8:10]), (end_time[10:12]), (end_time[12:14]))
 
@@ -72,7 +72,7 @@ IAcceptSTDEV = np.sqrt(sum(IAcceptDev)/len(IAcceptDev))
 
 print "Average value (rounded) of accepted current values [A]: "+str( round(IAcceptAvg, 10) )
 print "STDEV of accepted current values [A]: "+str( round(IAcceptSTDEV, 11) )
-print "Accumulated charge [C/cm]: "+str(dose)
+print "Accumulated charge [mC/cm]: "+str(dose*1000.)
 
 #fig, ax1 = plt.subplots()
 #ax1.set_xlabel('Time')

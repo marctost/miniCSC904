@@ -53,12 +53,12 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
     int refNorm;
     int irrNorm;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0., 53., 95., 121., 149., 180., 209., 0., 0., 0., 0.};
+        chamberDose = {0., 53., 95., 121., 149., 180., 209., 235., 0., 0., 0.};
         refNorm = 11; //ref(3,1)
         irrNorm = 5; //irr(3,1)
     }
     else if (which_chamber.Contains("chamber4")){
-        chamberDose = {0., 17., 26., 68., 123., 157., 0., 0., 0., 0., 0.};
+        chamberDose = {0., 26., 68., 123., 157., 188., 0., 0., 0., 0.};
         refNorm = 10; //ref(2,2)
         irrNorm = 4; //irr(2,2)
     }
@@ -73,8 +73,8 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i)/run_3.lines[0].at(refNorm));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i)/run_4.lines[0].at(refNorm));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i)/run_5.lines[0].at(refNorm));
-        //graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(refNorm));
-        //graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(refNorm));
+//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(refNorm));
+//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(refNorm));
         //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(refNorm));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i)/run_9.lines[0].at(refNorm));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i)/run_10.lines[0].at(refNorm));
@@ -86,8 +86,8 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i)/run_3.lines[0].at(irrNorm));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i)/run_4.lines[0].at(irrNorm));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i)/run_5.lines[0].at(irrNorm));
-        //graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(irrNorm));
-        //graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(irrNorm));
+//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(irrNorm));
+//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(irrNorm));
         //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(irrNorm));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i)/run_9.lines[0].at(irrNorm));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i)/run_10.lines[0].at(irrNorm));
@@ -99,8 +99,8 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i));
-        //graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i));
-        //graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i));
+//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i));
+//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i));
         //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i));
@@ -132,8 +132,8 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
 	float B = 0.12*H;
 	float L = 0.12*W;
 	float R = 0.04*W;
-	float x1_l = 0.38;
-	float y1_l = 0.90;
+	float x1_l = 0.35;
+	float y1_l = 0.35;
 	float dx_l = 0.20;
 	float dy_l = 0.20;
 	float x0_l = x1_l-dx_l;
@@ -354,7 +354,7 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
         mg->GetYaxis()->SetTitle("ADC Counts");
     }
     if (norm_or_no=="ref" or norm_or_no=="irr"){
-        mg->GetYaxis()->SetRangeUser(0.75, 1.25);
+        mg->GetYaxis()->SetRangeUser(0.5, 1.25);
     }
     else{
         mg->GetYaxis()->SetRangeUser(900, 1600);

@@ -45,15 +45,16 @@ void plot_strip(TString which_chamber) {
 
 // Makes the graphs
 TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
-    
-    int numRuns = 6;
+
+    //change this and the chamberDose entry, and uncomment the SetPoint line below
+    int numRuns = 7;
     
     std::vector<double> chamberDose;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0, 53, 95, 121, 149, 180, 209., 0., 0., 0., 0.};
+        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 0., 0., 0.};
     }
     else if (which_chamber.Contains("chamber4")){
-        chamberDose = {0., 17., 26., 68., 123., 157., 0., 0., 0., 0., 0.};
+        chamberDose = {0., 17., 26., 68., 123., 157., 188., 0., 0., 0., 0.};
     }
     
     TGraph *graph = new TGraph(numRuns);
@@ -66,8 +67,8 @@ TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLine
     graph->SetPoint(3, chamberDose[3], run_3.lines[1].at(i));
     graph->SetPoint(4, chamberDose[4], run_4.lines[1].at(i));
     graph->SetPoint(5, chamberDose[5], run_5.lines[1].at(i));
-    //graph->SetPoint(6, chamberDose[6], run_6.lines[1].at(i));
-    //graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
+    graph->SetPoint(6, chamberDose[6], run_6.lines[1].at(i));
+//    graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
     //graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
     //graph->SetPoint(9, chamberDose[9], run_9.lines[1].at(i));
     //graph->SetPoint(10, chamberDose[10], run_10.lines[1].at(i));
@@ -102,8 +103,8 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     
 //    float x1_l = 0.48;
 //    float y1_l = 0.90;
-    float x1_l = 0.96;
-    float y1_l = 0.92;
+    float x1_l = 0.42;
+    float y1_l = 0.37;
 	float dx_l = 0.30;
 	float dy_l = 0.25;
 	float x0_l = x1_l-dx_l;
@@ -210,7 +211,7 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     mg->GetXaxis()->SetTitle("Accumulated charge (mC/cm)");
     mg->GetYaxis()->SetTitle("Resistance (TOhms)");
     // Set the y range so that the legend doesn't cover up any points
-    mg->GetYaxis()->SetRangeUser(0.01, 1000);
+    mg->GetYaxis()->SetRangeUser(0.01, 50);
 	legend->Draw("SAME");
 
     // Locate where it goes and gets saved
@@ -219,7 +220,12 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     canvas->Update();
 //    canvas->SaveAs(saveWhere.c_str());
     canvas->SaveAs(saveWhere);
-    canvas;
+
+    mg->GetYaxis()->SetRangeUser(0.00001, 50);
+    saveWhere = which_chamber+"/"+"Plots/strip_to_strip_zoomOut.pdf";
+    canvas->SaveAs(saveWhere);
+
+//    delete canvas;
 
 	return 0;
 }

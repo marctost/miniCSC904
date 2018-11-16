@@ -83,11 +83,14 @@ TGraph* make_graph(PlotterLines graph_line){
 }
 
 int graph_section(TString which_chamber, string which_plot, PlotterLines graphLines0, PlotterLines graphLines1, PlotterLines graphLines2, PlotterLines graphLines3, PlotterLines graphLines4, PlotterLines graphLines5, PlotterLines graphLines6, PlotterLines graphLines7, PlotterLines graphLines8, PlotterLines graphLines9, PlotterLines graphLines10){
+
+
     
 	//Just some styling stuff
 	gROOT->SetBatch(true);
 	gStyle->SetOptStat(2210);
 	gStyle->SetTitleAlign(23);
+
 
 	//References for margins, canvas and the legend
 	int H = 800;
@@ -114,7 +117,9 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
 	canvas->SetTopMargin( T/H );
 	canvas->SetBottomMargin( B/H );
 	canvas->cd();
-    
+
+//    gPad->SetLogy();
+
     Color_t color_irr[] = {kOrange+10, kRed+2};
     Color_t color_ref[] = {kBlue, kBlue+3};
     Color_t old_color;
@@ -166,23 +171,23 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
     std::vector<int> markerStyles = {20, 21, 22, 34, 43, 29, 45, 47, 33, 41, 23, 39};
     
     TGraph* graph_0 = formatting(graph_0_, old_color, 0.1, markerStyles[0]);
-    TGraph* graph_1 = formatting(graph_1_, old_color, 0.3, markerStyles[1]);
-    TGraph* graph_2 = formatting(graph_2_, old_color, 0.5, markerStyles[2]);
-    TGraph* graph_3 = formatting(graph_3_, old_color, 0.7, markerStyles[3]);
-    TGraph* graph_4 = formatting(graph_4_, old_color, 0.9, markerStyles[4]);
-    TGraph* graph_5 = formatting(graph_5_, new_color, 1, markerStyles[5]);
-    TGraph* graph_6 = formatting(graph_6_, new_color, 1, markerStyles[6]);
-    TGraph* graph_7 = formatting(graph_7_, old_color, 1, markerStyles[7]);
+    TGraph* graph_1 = formatting(graph_1_, old_color, 0.2, markerStyles[1]);
+    TGraph* graph_2 = formatting(graph_2_, old_color, 0.3, markerStyles[2]);
+    TGraph* graph_3 = formatting(graph_3_, old_color, 0.5, markerStyles[3]);
+    TGraph* graph_4 = formatting(graph_4_, old_color, 0.7, markerStyles[4]);
+    TGraph* graph_5 = formatting(graph_5_, old_color, 0.8, markerStyles[5]);
+    TGraph* graph_6 = formatting(graph_6_, old_color, 0.9, markerStyles[6]);
+    TGraph* graph_7 = formatting(graph_7_, new_color, 1, markerStyles[7]);
     TGraph* graph_8 = formatting(graph_8_, old_color, 1, markerStyles[8]);
     TGraph* graph_9 = formatting(graph_9_, old_color, 1, markerStyles[9]);
     TGraph* graph_10 = formatting(graph_10_, new_color, 1, markerStyles[10]);
     
     std::vector<double> chamberDose;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0, 53, 95, 121, 149, 180, 209., 0., 0., 0., 0.};
+        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 0., 0., 0.};
     }
     else if (which_chamber.Contains("chamber4")){
-        chamberDose = {0., 17., 26., 68., 123., 157., 0., 0., 0., 0., 0.};
+        chamberDose = {0., 17., 26., 68., 123., 157., 188., 0., 0., 0., 0.};
     }
     else{
         chamberDose = {0., 0., 0., 0., 0., 0., 0., 0., 0., 0., 0.};
@@ -196,8 +201,8 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
     mg->Add(graph_3);
     mg->Add(graph_4);
     mg->Add(graph_5);
-    //mg->Add(graph_6);
-    //mg->Add(graph_7);
+    mg->Add(graph_6);
+    mg->Add(graph_7);
     //mg->Add(graph_8);
     //mg->Add(graph_9);
     //mg->Add(graph_10);
@@ -211,8 +216,8 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
         legend->AddEntry(graph_3, "Run 3, 121 mC/cm", "P");
         legend->AddEntry(graph_4, "Run 4, 149 mC/cm", "P");
         legend->AddEntry(graph_5, "Run 5, 180 mC/cm", "P");
-//        legend->AddEntry(graph_6, "Run 6, 209 mC/cm", "P");
-//        legend->AddEntry(graph_7, "Run 7, ? mC/cm", "P");
+        legend->AddEntry(graph_6, "Run 6, 209 mC/cm", "P");
+        legend->AddEntry(graph_7, "Run 7, 235 mC/cm", "P");
 //        legend->AddEntry(graph_8, "Run 8, ? mC/cm", "P");
 //        legend->AddEntry(graph_9, "Run 9, ? mC/cm", "P");
 //        legend->AddEntry(graph_10, "Run 10, ? mC/cm", "P");
@@ -220,7 +225,7 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
             mg->GetYaxis()->SetRangeUser(0., 2000.);
         }
         else if (which_plot=="ref"){
-            mg->GetYaxis()->SetRangeUser(0., 800.);
+            mg->GetYaxis()->SetRangeUser(0., 2000.);
         }
     }
     else if (which_chamber=="chamber4"){
@@ -230,13 +235,13 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
         legend->AddEntry(graph_3, "Run 3, 68 mC/cm", "P");
         legend->AddEntry(graph_4, "Run 4, 123 mC/cm", "P");
         legend->AddEntry(graph_5, "Run 5, 157 mC/cm", "P");
-//        legend->AddEntry(graph_6, "Run 6, ? mC/cm", "P");
+        legend->AddEntry(graph_6, "Run 6, 188 mC/cm", "P");
 //        legend->AddEntry(graph_7, "Run 7, ? mC/cm", "P");
 //        legend->AddEntry(graph_8, "Run 8, ? mC/cm", "P");
 //        legend->AddEntry(graph_9, "Run 9, ? mC/cm", "P");
 //        legend->AddEntry(graph_10, "Run 10, ? mC/cm", "P");
         
-        mg->GetYaxis()->SetRangeUser(0., 650.);
+        mg->GetYaxis()->SetRangeUser(0., 2000.);
     }
     
     mg->SetTitle(title);

@@ -101,8 +101,8 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
 
     gROOT->SetBatch(true);
     gStyle->SetOptStat(2210);
-    gStyle->SetTitleAlign(23);
-    
+//    gStyle->SetTitleAlign(23);
+
     int H = 800;
     int W = H;
     float T = 0.08*H;
@@ -260,14 +260,14 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
         graph->SetMarkerSize(1.7);
         graph->SetMarkerColorAlpha(color, transparency);
         graph->SetTitle(title);
-        
+
         if (which_chamber=="chamber5"){
-            std::vector<int> acc_charges = {0, 53, 95, 121, 149, 180, 209, 0, 0, 0, 0};
+            std::vector<int> acc_charges = {0, 53, 95, 121, 149, 180, 209, 235, 0, 0, 0};
             TString legendname = "Run "+to_string(j)+", "+to_string(acc_charges[j])+" mC/cm";
             legend->AddEntry(graph, legendname, "P");
         }
         else if (which_chamber=="chamber4"){
-            std::vector<int> acc_charges = {0, 17, 26, 68, 123, 157, 0, 0, 0, 0, 0};
+            std::vector<int> acc_charges = {0, 17, 26, 68, 123, 157, 188, 0, 0, 0, 0};
             TString legendname = "Run "+to_string(j)+", "+to_string(acc_charges[j])+" mC/cm";
             legend->AddEntry(graph, legendname, "P");
         }
@@ -279,14 +279,15 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
     mg->GetYaxis()->SetTitle("Hertz");
     mg->SetTitle(title);
     mg->GetXaxis()->SetRangeUser(2,4);
-    mg->SetMaximum(600);
-    
+    int ymax = 500;
+    mg->SetMaximum(ymax);
+
     canvas->cd();
     mg->Draw("ALP");
 	legend->Draw("SAME");
     
     canvas->Update();
-    TLine *line = new TLine(3.6, 0, 3.6, 600);
+    TLine *line = new TLine(3.6, 0, 3.6, ymax);
     line->SetLineColor(kPink-9);
     line->SetLineWidth(2.0);
     line->Draw();
