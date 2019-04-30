@@ -5,6 +5,12 @@ import datetime
 import numpy as np
 import matplotlib.pyplot as plt
 
+cwd = os.getcwd()
+print ("Current working directory: "+cwd)
+directory = cwd+"/Plots/"
+if not os.path.exists(directory):
+    os.makedirs(directory)
+
 doses = [0, 17, 26, 68, 123, 157, 188]
 doses_CC = [0, 26, 68, 123, 157, 188] #ommitted run1 due to lack of full data
 
@@ -79,62 +85,63 @@ del fig, ax1, hum1
 
 #############################################
 ### Dark Current, Irr Layer
-#hum1 = []
-#p1 = []
-#
-##fig, ax1 = plt.subplots()
-#fig = plt.figure(figsize=(7,2.5))
-#ax1 = plt.subplot(1,1,1)
-##ax1.set_title(r'Dark Current Irr. Layer')
-#
-#ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
-#ax1.set_xlabel('Dose [mC/cm]')
-#ax1.set_ylabel('Humidity', color='b')
-#ax1.tick_params('y', colors='b')
-#ax1.set_ylim(25, 45)
-#
-#ax2 = ax1.twinx()
-#ax2.plot(doses, p1, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
-#ax2.set_ylabel('Pressure', color='#e68a00')
-#ax2.tick_params('y', colors='#e68a00')
-#ax2.set_ylim(945, 965)
-#
-#fig.tight_layout()
-##plt.show()
-#fig.savefig("Plots/weather_DC_Irr_ch4.pdf")
-#del fig, ax1, ax2, hum1, p1
-#
+hum1 = [28, 30.5, 33.5, 40, 46, 36, 43]
+p1 = [955, 946.2, 940.8, 959.1, 964.1, 962.3, 956.8]
+
+#fig, ax1 = plt.subplots()
+fig = plt.figure(figsize=(7,2.5))
+ax1 = plt.subplot(1,1,1)
+#ax1.set_title(r'Dark Current Irr. Layer')
+
+ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
+ax1.set_xlabel('Dose [mC/cm]')
+ax1.set_ylabel('Humidity', color='b')
+ax1.tick_params('y', colors='b')
+ax1.set_ylim(25, 50)
+
+ax2 = ax1.twinx()
+ax2.plot(doses, p1, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
+ax2.set_ylabel('Pressure', color='#e68a00')
+ax2.tick_params('y', colors='#e68a00')
+ax2.set_ylim(935, 965)
+
+fig.tight_layout()
+#plt.show()
+fig.savefig("Plots/weather_DC_Irr_ch4.pdf")
+del fig, ax1, ax2, hum1, p1
+
 ##############################################
 ### Dark Current, Ref Layer
-#hum1 = []
-#p1 = []
-#
-##fig, ax1 = plt.subplots()
-#fig = plt.figure(figsize=(7,2.5))
-#ax1 = plt.subplot(1,1,1)
-##ax1.set_title(r'Dark Current Ref. Layer')
-#
-#ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
-#ax1.set_xlabel('Dose [mC/cm]')
-#ax1.set_ylabel('Humidity', color='b')
-#ax1.tick_params('y', colors='b')
-#ax1.set_ylim(25, 45)
-#
-#ax2 = ax1.twinx()
-#ax2.plot(doses, p1, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
-#ax2.set_ylabel('Pressure', color='#e68a00')
-#ax2.tick_params('y', colors='#e68a00')
-#ax2.set_ylim(945, 965)
-#
-#fig.tight_layout()
-##plt.show()
-#fig.savefig("Plots/weather_DC_Ref_ch4.pdf")
-#del fig, ax1, ax2, hum1, p1
-#
+hum1 = [26, 30.5, 32, 47, 29, 48.5, 43]
+p1 = [955.1, 951.2, 937.7, 956.6, 962.8, 959.8, 955.8]
+
+#fig, ax1 = plt.subplots()
+fig = plt.figure(figsize=(7,2.5))
+ax1 = plt.subplot(1,1,1)
+#ax1.set_title(r'Dark Current Ref. Layer')
+
+ax1.plot(doses, hum1, color='blue', linestyle='solid', marker='o', markersize=5.)
+ax1.set_xlabel('Dose [mC/cm]')
+ax1.set_ylabel('Humidity', color='b')
+ax1.tick_params('y', colors='b')
+ax1.set_ylim(25, 50)
+
+ax2 = ax1.twinx()
+ax2.plot(doses, p1, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
+ax2.set_ylabel('Pressure', color='#e68a00')
+ax2.tick_params('y', colors='#e68a00')
+ax2.set_ylim(935, 965)
+
+fig.tight_layout()
+#plt.show()
+fig.savefig("Plots/weather_DC_Ref_ch4.pdf")
+del fig, ax1, ax2, hum1, p1
+
 ##############################################
 ## Dark Current, Humidity
-humRef = []
-humIrr = []
+## Values taken at 3.6 kV times
+humRef = [26, 30.5, 32, 47, 29, 48.5, 43]
+humIrr = [28, 30.5, 33.5, 40, 46, 36, 43]
 
 #fig, ax1 = plt.subplots()
 fig = plt.figure(figsize=(7,2.5))
@@ -145,13 +152,13 @@ ax1.plot(doses, humRef, color='blue', linestyle='solid', marker='o', markersize=
 ax1.set_xlabel('Dose [mC/cm]')
 ax1.set_ylabel('Humidity (Ref. Layer)', color='b')
 ax1.tick_params('y', colors='b')
-ax1.set_ylim(25, 45)
+ax1.set_ylim(25, 50)
 
 ax2 = ax1.twinx()
 ax2.plot(doses, humIrr, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
 ax2.set_ylabel('Humidity (Irr. Layer)', color='#e68a00')
 ax2.tick_params('y', colors='#e68a00')
-ax2.set_ylim(25, 45)
+ax2.set_ylim(25, 50)
 
 fig.tight_layout()
 #plt.show()
@@ -160,28 +167,28 @@ del fig, ax1, ax2, humRef, humIrr
 
 ##############################################
 ### Dark Current, Pressure
-#pRef = []
-#pIrr = []
-#
-##fig, ax1 = plt.subplots()
-#fig = plt.figure(figsize=(7,2.5))
-#ax1 = plt.subplot(1,1,1)
-##ax1.set_title(r'Dark Current Ref. Layer')
-#
-#ax1.plot(doses, pRef, color='blue', linestyle='solid', marker='o', markersize=5.)
-#ax1.set_xlabel('Dose [mC/cm]')
-#ax1.set_ylabel('Pressure (Ref. Layer)', color='b')
-#ax1.tick_params('y', colors='b')
-#ax1.set_ylim(945, 965)
-#
-#ax2 = ax1.twinx()
-#ax2.plot(doses, pIrr, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
-#ax2.set_ylabel('Pressure (Irr. Layer)', color='#e68a00')
-#ax2.tick_params('y', colors='#e68a00')
-#ax2.set_ylim(945, 965)
-#
-#fig.tight_layout()
-##plt.show()
-#fig.savefig("Plots/weather_DC_Pressure_ch4.pdf")
-#del fig, ax1, ax2, pRef, pIrr
+pRef = [955.1, 951.2, 937.7, 956.6, 962.8, 959.8, 955.8]
+pIrr = [955, 946.2, 940.8, 959.1, 964.1, 962.3, 956.8]
+
+#fig, ax1 = plt.subplots()
+fig = plt.figure(figsize=(7,2.5))
+ax1 = plt.subplot(1,1,1)
+#ax1.set_title(r'Dark Current Ref. Layer')
+
+ax1.plot(doses, pRef, color='blue', linestyle='solid', marker='o', markersize=5.)
+ax1.set_xlabel('Dose [mC/cm]')
+ax1.set_ylabel('Pressure (Ref. Layer)', color='b')
+ax1.tick_params('y', colors='b')
+ax1.set_ylim(935, 965)
+
+ax2 = ax1.twinx()
+ax2.plot(doses, pIrr, color='#e68a00', linestyle='solid', marker='o', markersize=5.)
+ax2.set_ylabel('Pressure (Irr. Layer)', color='#e68a00')
+ax2.tick_params('y', colors='#e68a00')
+ax2.set_ylim(935, 965)
+
+fig.tight_layout()
+#plt.show()
+fig.savefig("Plots/weather_DC_Pressure_ch4.pdf")
+del fig, ax1, ax2, pRef, pIrr
 

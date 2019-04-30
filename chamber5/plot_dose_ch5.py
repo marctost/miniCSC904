@@ -9,32 +9,79 @@ from matplotlib.dates import DateFormatter
 os.system("mkdir -p Plots/")
 
 formatter = DateFormatter('%d/%m')
-date0 = datetime.date(2018, 4, 9)
-date1 = datetime.date(2018, 5, 24)
-date2 = datetime.date(2018, 6, 6)
-date3 = datetime.date(2018, 6, 13)
-date4 = datetime.date(2018, 6, 20)
-date5 = datetime.date(2018, 7, 27)
-date6 = datetime.date(2018, 8, 30)
-date7 = datetime.date(2018, 11, 4)
+dates = []
+doses = []
 
-dates = [date0, date1, date2, date3, date4, date5, date6, date7]
-doses = [0, 53, 95, 121, 149, 180, 209, 235]
-runnum = [0, 1, 2, 3, 4, 5, 6, 7]
+dates.append( datetime.date(2018, 4, 9) ) #run0
+dates.append( datetime.date(2018, 4, 18) ) #run0, part 2 (till 15.5)
+dates.append( datetime.date(2018, 5, 18) ) #start?
+dates.append( datetime.date(2018, 5, 24) ) #stop
+#dates.append( datetime.date(2018, 5, 25) ) #run1 (through 30.5)
+dates.append( datetime.date(2018, 6, 1) ) #start of irr
+dates.append( datetime.date(2018, 6, 6) ) #stop irr
+#dates.append( datetime.date(2018, 6, 6) ) #run2 (through 7.6)
+dates.append( datetime.date(2018, 6, 10) ) #start again
+dates.append( datetime.date(2018, 6, 13) ) #stop
+#dates.append( datetime.date(2018, 6, 13) ) #run3 (through 14.6?)
+dates.append( datetime.date(2018, 6, 15) ) #start
+dates.append( datetime.date(2018, 6, 20) ) #stop
+#dates.append( datetime.date(2018, 6, 20) ) #run4 (through 16.7?)
+dates.append( datetime.date(2018, 7, 18) ) #start
+dates.append( datetime.date(2018, 7, 27) ) #stop
+#dates.append( datetime.date(2018, 7, 27) ) #run5 (through 3.8 or 21.8???)
+dates.append( datetime.date(2018, 8, 23) ) #start?
+dates.append( datetime.date(2018, 8, 30) ) #stop
+#dates.append( datetime.date(2018, 8, 30) ) #run6 (through 2.10)
+dates.append( datetime.date(2018, 10, 28) ) #start?????
+dates.append( datetime.date(2018, 11, 2) ) #stop
+#dates.append( datetime.date(2018, 11, 4) ) #run7 (through 9.11)
+dates.append( datetime.date(2018, 11, 9) ) #start
+dates.append( datetime.date(2018, 11, 28) ) #stop
+dates.append( datetime.date(2018, 12, 4) ) #date of talk
+
+doses.append(0)
+doses.append(0)
+doses.append(0)
+doses.append(53)
+#doses.append(53) #run1
+doses.append(53)
+doses.append(95)
+#doses.append(95) #run2
+doses.append(95)
+doses.append(121)
+#doses.append(121) #run3
+doses.append(121)
+doses.append(149)
+#doses.append(149) #run4
+doses.append(149)
+doses.append(180)
+#doses.append(180) #run5
+doses.append(180)
+doses.append(209)
+#doses.append(209) #run6
+doses.append(209)
+doses.append(235)
+#doses.append(235) #run7
+doses.append(235)
+doses.append(316)
+doses.append(316)
+
 
 fig, ax = plt.subplots()
-plt.plot_date(dates, doses, color='black', linewidth=1., linestyle='solid', marker = 'o', markersize=5.)
+plt.plot_date(dates, doses, color='black', linewidth=2., linestyle='solid', marker = 's', markersize=0.)
 ax.xaxis.set_major_formatter(formatter)
 #ax.xaxis.set_tick_params(rotation=30, labelsize=10)
 ax.set_xlabel('Date')
 ax.set_ylabel('Dose [mC/cm]')
-ax.set_title(r'Accum. Charge for Ar(40%)+CO$_2$(60%)+CF$_4$(0%) miniCSC Study')
-ax.set_xlim([datetime.date(2018, 4, 1), datetime.date(2018, 11, 25)])
-ax.set_ylim(-10., 300.)
+ax.set_title(r'Accum. Charge for CF$_4$(0%) b904 Study')
+ax.set_xlim([datetime.date(2018, 4, 1), datetime.date(2018, 12, 31)])
+ax.set_ylim(-5., 350.)
+ax.axhline(y=240, linewidth=1, linestyle='--', color='k')
+ax.text(0.05, 0.7, '3x expected HL-LHC dose = 240 mC/cm', transform=ax.transAxes, style='italic', color='black', fontsize=10)
 
-## Try annotating the individual points
-for i,txt in enumerate(runnum):
-    ax.annotate(doses[i],(dates[i], doses[i]), xytext=(10, -5), textcoords='offset points')
+numpoints = len(doses)
+ax.annotate(str(doses[numpoints-1])+" mC/cm",(dates[numpoints-1], doses[numpoints-1]), xytext=(-30, 10), textcoords='offset points')
+plt.plot_date(dates[numpoints-1], doses[numpoints-1], color='#FFD700', linewidth=0., linestyle='solid', marker = '*', markersize=10.)
 
 #plt.show()
 fig.savefig("Plots/dose_ch5.pdf")

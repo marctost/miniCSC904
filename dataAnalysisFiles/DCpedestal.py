@@ -1,5 +1,4 @@
 #! /usr/bin/env python3
-
 import os
 import sys
 import numpy as np
@@ -15,9 +14,10 @@ from scipy.optimize import curve_fit
 ## The last current section should be a well-defined single section
 
 #########################################################
-filename = 'run6dc_GIFchamber/Dark_current_Ref_NoS_4000V.txt' #input text file
-ndivisions = 1 #This value is meant to be tweaked to make how we divide the current into sections make sense
+filename = 'gasgain18march19/Dark_current_20190318_S_T22_3700V.txt' #input text file
+ndivisions = 4 #This value is meant to be tweaked to make how we divide the current into sections make sense
 plotLine = True
+#plotLine = False
 #########################################################
 
 points = 1000000
@@ -123,16 +123,13 @@ plt.show()
 
 # --------------------------------------------------
 print("\n--------> "+filename)
-print('Start time: ' + str(time[0]))
+print('\nStart time: ' + str(time[0]))
 print('End time: ' + str(time[np.size(amps)-1]))
 print('Accept rate: ' + str(accept_rate))
 print('\nAverage: ' + str(avg))
 print('STDEV: ' + str(stdev))
-
 print('\nFiltered total average: ' + str(filteravg)) #Total average
 print ('Average of last current "section": ' + str(avgList[ndivisions-1]))
-
-print('\nFiltered total stdev (stat. error): ' + str(filterstdev)) #Statistical error
-print('Error in bias (syst. error): ' + str(maxDeviation)) #Error in stopping measurement at a decided point
-
+print('\nFiltered total stdev (stat. error): ' + str(filterstdev)) #Statistical error due to Keithley sampling and noise
+print('Error in bias (syst. error): ' + str(maxDeviation)) #Error in stopping measurement at a decided point (roughly estimated)
 print('\nFinal value: ' + str(avgList[ndivisions-1]) + ' +- ' + str(totalError))

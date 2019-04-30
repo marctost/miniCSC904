@@ -47,11 +47,11 @@ void plot_strip(TString which_chamber) {
 TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
 
     //change this and the chamberDose entry, and uncomment the SetPoint line below
-    int numRuns = 7;
+    int numRuns = 9;
     
     std::vector<double> chamberDose;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 0., 0., 0.};
+        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 316., 0., 0.};
     }
     else if (which_chamber.Contains("chamber4")){
         chamberDose = {0., 17., 26., 68., 123., 157., 188., 0., 0., 0., 0.};
@@ -68,8 +68,8 @@ TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLine
     graph->SetPoint(4, chamberDose[4], run_4.lines[1].at(i));
     graph->SetPoint(5, chamberDose[5], run_5.lines[1].at(i));
     graph->SetPoint(6, chamberDose[6], run_6.lines[1].at(i));
-//    graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
-    //graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
+    graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
+    graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
     //graph->SetPoint(9, chamberDose[9], run_9.lines[1].at(i));
     //graph->SetPoint(10, chamberDose[10], run_10.lines[1].at(i));
     
@@ -103,9 +103,9 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     
 //    float x1_l = 0.48;
 //    float y1_l = 0.90;
-    float x1_l = 0.42;
+    float x1_l = 0.62;
     float y1_l = 0.37;
-	float dx_l = 0.30;
+	float dx_l = 0.50;
 	float dy_l = 0.25;
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
@@ -144,10 +144,10 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
         TGraph* fin_graph_pair_4 = format_me(graph_pair_4, colors[2]);
         
         // Label the legend by hand
-        legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (irr layer) (irr)");
-        legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (irr layer)");
-        legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref layer)");
-        legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref layer)");
+        legend->AddEntry(fin_graph_pair_1, "Strip pair 1 (Irr layer) (Irradiated Hole)");
+        legend->AddEntry(fin_graph_pair_2, "Strip pair 2 (Irr layer)");
+        legend->AddEntry(fin_graph_pair_3, "Strip pair 3 (Ref layer)");
+        legend->AddEntry(fin_graph_pair_4, "Strip pair 4 (Ref layer)");
         
         // Make a multigraph to put all the stuff into and draw all at once.
         mg->Add(fin_graph_pair_1);
@@ -177,14 +177,14 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
         TGraph* fin_graph_pair_8 = format_me(graph_pair_8, colors[9]);
         
         // Label the legend by hand
-        legend->AddEntry(fin_graph_pair_1, "Wire pair 1 (ref layer)");
-        legend->AddEntry(fin_graph_pair_2, "Wire pair 2 (ref layer)");
-        legend->AddEntry(fin_graph_pair_3, "Wire pair 3 (ref layer)");
-        legend->AddEntry(fin_graph_pair_4, "Wire pair 4 (ref layer)");
-        legend->AddEntry(fin_graph_pair_5, "Wire pair 5 (irr layer)");
-        legend->AddEntry(fin_graph_pair_6, "Wire pair 6 (irr layer)");
-        legend->AddEntry(fin_graph_pair_7, "Wire pair 7 (irr layer)");
-        legend->AddEntry(fin_graph_pair_8, "Wire pair 8 (irr layer)");
+        legend->AddEntry(fin_graph_pair_1, "Strip pair 1 (ref layer)");
+        legend->AddEntry(fin_graph_pair_2, "Strip pair 2 (ref layer)");
+        legend->AddEntry(fin_graph_pair_3, "Strip pair 3 (ref layer)");
+        legend->AddEntry(fin_graph_pair_4, "Strip pair 4 (ref layer)");
+        legend->AddEntry(fin_graph_pair_5, "Strip pair 5 (irr layer)");
+        legend->AddEntry(fin_graph_pair_6, "Strip pair 6 (irr layer)");
+        legend->AddEntry(fin_graph_pair_7, "Strip pair 7 (irr layer)");
+        legend->AddEntry(fin_graph_pair_8, "Strip pair 8 (irr layer)");
         
         // Make a multigraph to put all the stuff into and draw all at once.
         mg->Add(fin_graph_pair_1);
@@ -220,6 +220,12 @@ int graph_section(TString which_chamber, PlotterLines run_0, PlotterLines run_1,
     canvas->Update();
 //    canvas->SaveAs(saveWhere.c_str());
     canvas->SaveAs(saveWhere);
+
+    TLine *line = new TLine(240., 0.00001, 240., 50);
+    line->SetLineColor(kBlack);
+    line->SetLineWidth(2.0);
+    line->SetLineStyle(9);
+    line->Draw();
 
     mg->GetYaxis()->SetRangeUser(0.00001, 50);
     saveWhere = which_chamber+"/"+"Plots/strip_to_strip_zoomOut.pdf";

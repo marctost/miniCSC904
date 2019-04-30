@@ -5,7 +5,10 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
 void plot_rate(TString which_chamber, string which_plot, string subtract_or_no, string irr_or_ref, string type, int num_runs) {
     std::cout << "\n---------- Doing " << which_chamber << ", " << which_plot << ", " << subtract_or_no << std::endl;
     ExcelSheet test(which_chamber+"/"+"final_numbers_rate.csv");
-    
+//    ExcelSheet test(which_chamber+"/"+"final_numbers_rate_sourceCorrection.csv"); //Cd-109 source-corrected rates
+//    ExcelSheet test(which_chamber+"/"+"final_numbers_rate_darkRateWeights_IRR.csv");
+//    ExcelSheet test(which_chamber+"/"+"final_numbers_rate_darkRateWeights_REF.csv");
+
     //PlotterLines constructor args --
     //1st arg: excel spreadsheet
     //2nd arg: starting row (counts from 0)
@@ -262,7 +265,7 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
         graph->SetTitle(title);
 
         if (which_chamber=="chamber5"){
-            std::vector<int> acc_charges = {0, 53, 95, 121, 149, 180, 209, 235, 0, 0, 0};
+            std::vector<int> acc_charges = {0, 53, 95, 121, 149, 180, 209, 235, 316, 0, 0};
             TString legendname = "Run "+to_string(j)+", "+to_string(acc_charges[j])+" mC/cm";
             legend->AddEntry(graph, legendname, "P");
         }
@@ -279,7 +282,8 @@ int graph_section(TString which_chamber, string which_plot, PlotterLines graphLi
     mg->GetYaxis()->SetTitle("Hertz");
     mg->SetTitle(title);
     mg->GetXaxis()->SetRangeUser(2,4);
-    int ymax = 500;
+    int ymax = 350;
+//    int ymax = 500;
     mg->SetMaximum(ymax);
 
     canvas->cd();

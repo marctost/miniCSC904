@@ -3,7 +3,7 @@
 int graph_section(TString which_chamber, string filename, string norm_or_no, PlotterLines hole_num, PlotterLines run_0,PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 TGraph* make_graph(string norm_or_no, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10);
 float  _val_ref(PlotterLines run);
-TGraph* format_me(TGraph* graph, Color_t color);
+TGraph* format_me(TGraph* graph, Color_t color, bool isIrrHole);
 
 void plot_cluster_charge(TString which_chamber, string which_plot, string norm_or_no) {
     ExcelSheet test(which_chamber+"/"+"analysis_page_cluster.csv");
@@ -47,13 +47,13 @@ void plot_cluster_charge(TString which_chamber, string which_plot, string norm_o
 
 TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
     
-    int numRuns = 6;
+    int numRuns = 9;
     
     std::vector<double> chamberDose;
     int refNorm;
     int irrNorm;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0., 53., 95., 121., 149., 180., 209., 235., 0., 0., 0.};
+        chamberDose = {0., 53., 95., 121., 149., 180., 209., 235., 316., 0., 0.};
         refNorm = 11; //ref(3,1)
         irrNorm = 5; //irr(3,1)
     }
@@ -73,9 +73,9 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i)/run_3.lines[0].at(refNorm));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i)/run_4.lines[0].at(refNorm));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i)/run_5.lines[0].at(refNorm));
-//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(refNorm));
-//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(refNorm));
-        //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(refNorm));
+        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(refNorm));
+        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(refNorm));
+        graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(refNorm));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i)/run_9.lines[0].at(refNorm));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i)/run_10.lines[0].at(refNorm));
     }
@@ -86,9 +86,9 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i)/run_3.lines[0].at(irrNorm));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i)/run_4.lines[0].at(irrNorm));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i)/run_5.lines[0].at(irrNorm));
-//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(irrNorm));
-//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(irrNorm));
-        //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(irrNorm));
+        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i)/run_6.lines[0].at(irrNorm));
+        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i)/run_7.lines[0].at(irrNorm));
+        graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i)/run_8.lines[0].at(irrNorm));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i)/run_9.lines[0].at(irrNorm));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i)/run_10.lines[0].at(irrNorm));
     }
@@ -99,21 +99,29 @@ TGraph* make_graph(TString which_chamber, string norm_or_no, int i, PlotterLines
         graph->SetPoint(3, chamberDose[3], run_3.lines[0].at(i));
         graph->SetPoint(4, chamberDose[4], run_4.lines[0].at(i));
         graph->SetPoint(5, chamberDose[5], run_5.lines[0].at(i));
-//        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i));
-//        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i));
-        //graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i));
+        graph->SetPoint(6, chamberDose[6], run_6.lines[0].at(i));
+        graph->SetPoint(7, chamberDose[7], run_7.lines[0].at(i));
+        graph->SetPoint(8, chamberDose[8], run_8.lines[0].at(i));
         //graph->SetPoint(9, chamberDose[9], run_9.lines[0].at(i));
         //graph->SetPoint(10, chamberDose[10], run_10.lines[0].at(i));
     }
     return graph;
 }
 
-TGraph* format_me(TGraph* graph, Color_t color){
+TGraph* format_me(TGraph* graph, Color_t color, bool isIrrHole){
     graph->SetLineColor(color);
     graph->SetMarkerStyle(20);
-    graph->SetMarkerSize(0.8);
+//    graph->SetMarkerSize(0.8);
     graph->SetMarkerColor(color);
-    graph->SetLineWidth(2.0);
+//    graph->SetLineWidth(2.0);
+    if (isIrrHole) {
+        graph->SetLineWidth(4.0);
+        graph->SetMarkerSize(1.2);
+    }
+    else {
+        graph->SetLineWidth(2.0);
+        graph->SetMarkerSize(0.8);
+    }
     
     return graph;
 }
@@ -132,9 +140,9 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
 	float B = 0.12*H;
 	float L = 0.12*W;
 	float R = 0.04*W;
-	float x1_l = 0.35;
+	float x1_l = 0.55;
 	float y1_l = 0.35;
-	float dx_l = 0.20;
+	float dx_l = 0.40;
 	float dy_l = 0.20;
 	float x0_l = x1_l-dx_l;
 	float y0_l = y1_l-dy_l;
@@ -167,22 +175,22 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
         TGraph* graph_ref_2_2 = make_graph(which_chamber, norm_or_no, 10, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
         TGraph* graph_ref_3_1 = make_graph(which_chamber, norm_or_no, 11, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
         
-        TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6]);
-        TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7]);
-        TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8]);
-        TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9]);
-        TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0]);
-        TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1]);
+        TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6], 0);
+        TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7], 1);
+        TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8], 0);
+        TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9], 0);
+        TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0], 0);
+        TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1], 0);
         
         if (norm_or_no=="irr") {
             legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
-            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (Irradiated Hole)");
             //        legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
             legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
         }
         else if (norm_or_no=="ref") {
             legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
-            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (Irradiated Hole)");
             legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
             legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
             legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
@@ -190,7 +198,7 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
         }
         else {
             legend->AddEntry(fin_graph_irr_2_1, "Irr (2,1)");
-            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (irr)");
+            legend->AddEntry(fin_graph_irr_2_2, "Irr (2,2) (Irradiated Hole)");
             legend->AddEntry(fin_graph_irr_3_1, "Irr (3,1)");
             legend->AddEntry(fin_graph_irr_3_2, "Irr (3,2)");
             legend->AddEntry(fin_graph_ref_2_2, "Ref (2,2)");
@@ -235,18 +243,18 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
         TGraph* graph_ref_3_1 = make_graph(which_chamber, norm_or_no, 11, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
         TGraph* graph_ref_3_2 = make_graph(which_chamber, norm_or_no, 12, run_0, run_1, run_2, run_3, run_4, run_5, run_6, run_7, run_8, run_9, run_10);
         
-        TGraph* fin_graph_irr_1_1 = format_me(graph_irr_1_1, colors[10]);
-        TGraph* fin_graph_irr_1_2 = format_me(graph_irr_1_2, colors[11]);
-        TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6]);
-        TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7]);
-        TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8]);
-        TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9]);
-        TGraph* fin_graph_ref_1_1 = format_me(graph_ref_1_1, colors[4]);
-        TGraph* fin_graph_ref_1_2 = format_me(graph_ref_1_2, colors[5]);
-        TGraph* fin_graph_ref_2_1 = format_me(graph_ref_2_1, colors[3]);
-        TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0]);
-        TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1]);
-        TGraph* fin_graph_ref_3_2 = format_me(graph_ref_3_2, colors[2]);
+        TGraph* fin_graph_irr_1_1 = format_me(graph_irr_1_1, colors[10], 0);
+        TGraph* fin_graph_irr_1_2 = format_me(graph_irr_1_2, colors[11], 0);
+        TGraph* fin_graph_irr_2_1 = format_me(graph_irr_2_1, colors[6], 0);
+        TGraph* fin_graph_irr_2_2 = format_me(graph_irr_2_2, colors[7], 0);
+        TGraph* fin_graph_irr_3_1 = format_me(graph_irr_3_1, colors[8], 0);
+        TGraph* fin_graph_irr_3_2 = format_me(graph_irr_3_2, colors[9], 0);
+        TGraph* fin_graph_ref_1_1 = format_me(graph_ref_1_1, colors[4], 0);
+        TGraph* fin_graph_ref_1_2 = format_me(graph_ref_1_2, colors[5], 0);
+        TGraph* fin_graph_ref_2_1 = format_me(graph_ref_2_1, colors[3], 0);
+        TGraph* fin_graph_ref_2_2 = format_me(graph_ref_2_2, colors[0], 0);
+        TGraph* fin_graph_ref_3_1 = format_me(graph_ref_3_1, colors[1], 0);
+        TGraph* fin_graph_ref_3_2 = format_me(graph_ref_3_2, colors[2], 0);
         
         if (norm_or_no=="irr") {
             legend->AddEntry(fin_graph_irr_1_1, "Irr (1,1)");
@@ -354,13 +362,25 @@ int graph_section(TString which_chamber, string filename, string norm_or_no, Plo
         mg->GetYaxis()->SetTitle("ADC Counts");
     }
     if (norm_or_no=="ref" or norm_or_no=="irr"){
-        mg->GetYaxis()->SetRangeUser(0.5, 1.25);
+        mg->GetYaxis()->SetRangeUser(0., 1.2);
+        TLine *line = new TLine(240., 0., 240., 1.2);
+        line->SetLineColor(kBlack);
+        line->SetLineWidth(2.0);
+        line->SetLineStyle(9);
+        line->Draw();
     }
     else{
-        mg->GetYaxis()->SetRangeUser(900, 1600);
+        mg->GetYaxis()->SetRangeUser(700, 1500);
+        TLine *line = new TLine(240., 700., 240., 1500.);
+        line->SetLineColor(kBlack);
+        line->SetLineWidth(2.0);
+        line->SetLineStyle(9);
+        line->Draw();
     }
 
 	legend->Draw("SAME");
+
+
 
     // Save plots
     system("mkdir -p "+which_chamber+"/"+"Plots/");

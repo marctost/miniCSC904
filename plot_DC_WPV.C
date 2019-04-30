@@ -45,11 +45,11 @@ void plot_DC_WPV(TString which_chamber) {
 
 // Makes the graphs
 TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLines run_1, PlotterLines run_2, PlotterLines run_3, PlotterLines run_4, PlotterLines run_5, PlotterLines run_6, PlotterLines run_7, PlotterLines run_8, PlotterLines run_9, PlotterLines run_10){
-    TGraph *graph = new TGraph(7); //argument is the number of runs/points on the graph for each data series
+    TGraph *graph = new TGraph(9); //argument is the number of runs/points on the graph for each data series
     
     std::vector<double> chamberDose;
     if (which_chamber.Contains("chamber5")){
-        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 0., 0., 0.};
+        chamberDose = {0, 53, 95, 121, 149, 180, 209., 235., 316., 0., 0.};
     }
     else if (which_chamber.Contains("chamber4")){
         chamberDose = {0., 17., 26., 68., 123., 157., 188., 0., 0., 0., 0.};
@@ -66,8 +66,8 @@ TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLine
     graph->SetPoint(4, chamberDose[4], run_4.lines[1].at(i));
     graph->SetPoint(5, chamberDose[5], run_5.lines[1].at(i));
     graph->SetPoint(6, chamberDose[6], run_6.lines[1].at(i));
-//    graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
-    //graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
+    graph->SetPoint(7, chamberDose[7], run_7.lines[1].at(i));
+    graph->SetPoint(8, chamberDose[8], run_8.lines[1].at(i));
     //graph->SetPoint(9, chamberDose[9], run_9.lines[1].at(i));
     //graph->SetPoint(10, chamberDose[10], run_10.lines[1].at(i));
     
@@ -78,9 +78,9 @@ TGraph* make_graph(TString which_chamber, int i, PlotterLines run_0, PlotterLine
 TGraph* format_me(TGraph* graph, Color_t color){
     graph->SetLineColor(color);
     graph->SetMarkerStyle(20);
-    graph->SetMarkerSize(0.8);
+    graph->SetMarkerSize(1.2);
     graph->SetMarkerColor(color);
-    graph->SetLineWidth(2.0);
+    graph->SetLineWidth(3.0);
     
     return graph;
 }
@@ -101,9 +101,9 @@ int graph_section(TString which_chamber, PlotterLines irr_0, PlotterLines irr_1,
     float B = 0.12*H;
     float L = 0.12*W;
     float R = 0.04*W;
-    float x1_l = 0.37;
+    float x1_l = 0.52;
     float y1_l = 0.92;
-    float dx_l = 0.25;
+    float dx_l = 0.4;
     float dy_l = 0.25;
     float x0_l = x1_l-dx_l;
     float y0_l = y1_l-dy_l;
@@ -155,12 +155,27 @@ int graph_section(TString which_chamber, PlotterLines irr_0, PlotterLines irr_1,
     mg->GetYaxis()->SetTitle("Current [pA]");
     if (which_chamber.Contains("chamber5")){
         mg->GetYaxis()->SetRangeUser(0., 2000.);
+        TLine *line = new TLine(240., 0., 240., 2000.);
+        line->SetLineColor(kBlack);
+        line->SetLineWidth(2.0);
+        line->SetLineStyle(9);
+        line->Draw();
     }
     else if (which_chamber.Contains("chamber4")){
         mg->GetYaxis()->SetRangeUser(0., 2000.);
+        TLine *line = new TLine(240., 0., 240., 2000.);
+        line->SetLineColor(kBlack);
+        line->SetLineWidth(2.0);
+        line->SetLineStyle(9);
+        line->Draw();
     }
     else{
         mg->GetYaxis()->SetRangeUser(0., 2000.);
+        TLine *line = new TLine(240., 0., 240., 2000.);
+        line->SetLineColor(kBlack);
+        line->SetLineWidth(2.0);
+        line->SetLineStyle(9);
+        line->Draw();
     }
     legend->Draw("SAME");
     
